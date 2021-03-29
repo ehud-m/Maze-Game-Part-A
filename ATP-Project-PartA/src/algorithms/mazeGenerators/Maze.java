@@ -2,7 +2,7 @@ package algorithms.mazeGenerators;
 
 public class Maze {
     private Position start;
-    private Position end;
+    private Position goal;
     private int rows;
     private int cols;
     private int[][] map;
@@ -17,29 +17,42 @@ public class Maze {
         this.start = start;
     }
 
-    public void setEnd(Position end) {
-        this.end = end;
+    public void setGoal(Position goal) {
+        this.goal = goal;
     }
 
     public Position getStartPosition() {
         return start;
     }
 
-    public Position getEndPosition() {
-        return end;
+    public Position getGoalPosition() {
+        return goal;
     }
 
-    private String getCellString(int row,int col) {
+    public int getRows() {
+        return rows;
+    }
+
+    public int getCols() {
+        return cols;
+    }
+
+
+    public int[][] getMap() {
+        return map;
+    }
+
+    private String getCellString(int row, int col) {
         if (start.getRowIndex()==row && start.getColumnIndex()==col)
             return "S";
-        else if (end.getRowIndex()==row && end.getColumnIndex()==col)
+        else if (goal.getRowIndex()==row && goal.getColumnIndex()==col)
             return "E";
         else
             return map[row][col]+"";
     }
 
     public void print() {
-        for (int i=0;i<=map.length;i++) {
+        for (int i=0;i<=map.length-1;i++) {
             int j;
             for (j=0;j<map[0].length-1;j++) {
                 System.out.print(getCellString(i,j)+" ");
