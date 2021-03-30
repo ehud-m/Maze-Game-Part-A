@@ -6,11 +6,7 @@ public class SimpleMazeGenerator extends AMazeGenerator {
     @Override
     public Maze generate(int row, int col) {
         Maze maze = new Maze(row,col);
-        int[][] map = maze.getMap();
-        for(int i=0;i<row;i++) {
-            for (int j=0;j<col;j++)
-                map[i][j]=2;
-        }
+        InitBoard(maze,2)
         createRoad(maze);
         randomCells(maze);
         return maze;
