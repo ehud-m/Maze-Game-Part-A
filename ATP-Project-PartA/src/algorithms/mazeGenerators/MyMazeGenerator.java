@@ -1,10 +1,6 @@
 package algorithms.mazeGenerators;
 
-import java.util.Arrays;
-
-public class EmptyMazeGenerator extends AMazeGenerator {
-
-
+public class MyMazeGenerator extends AMazeGenerator {
     @Override
     public Maze generate(int row, int col) {
         Maze maze = null;
@@ -14,12 +10,13 @@ public class EmptyMazeGenerator extends AMazeGenerator {
         }
         else{
             maze = new Maze(row,col);
-            InitBoard(maze,0);
-            Position start = new Position(row/2,0);
-            Position end = new Position(row/2,col-1);
-            maze.setStart(start);
-            maze.setGoal(end);
+            InitBoard(maze,1);
         }
-        return maze;
+        return null;
+    }
+
+    public MyMazeGenerator() {
+        return;
+
     }
 }
