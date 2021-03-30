@@ -77,7 +77,7 @@ public class Maze {
         return false;
     }
 
-    private boolean PositionInMaze(Position position) {
+    public boolean PositionInMaze(Position position) {
         return (position.getColumnIndex() < cols && position.getRowIndex() < rows && position.getRowIndex() >= 0 && position.getColumnIndex() >= 0);
     }
 }
