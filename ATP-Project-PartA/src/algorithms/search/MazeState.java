@@ -11,4 +11,10 @@ public class MazeState extends AState{
     public Position getPosition() {
         return p;
     }
+
+    public boolean equals(Object other) {
+        if (!(other instanceof MazeState))
+            return false;
+        return ((MazeState)other).getPosition().equals(p);
+    }
 }

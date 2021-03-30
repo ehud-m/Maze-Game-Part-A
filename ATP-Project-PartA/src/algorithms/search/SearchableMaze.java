@@ -6,20 +6,27 @@ import algorithms.mazeGenerators.Position;
 import java.util.ArrayList;
 
 public class SearchableMaze implements ISearchable{
+    private boolean[][] visited;
     private MazeState startState;
     private MazeState goalState;
     private MazeState currentState;
     private Maze maze;
 
     public SearchableMaze(Maze maze) {
+        visited=new boolean[maze.getRows()][maze.getCols()];
+        for (int i=0;i<visited.length;i++) {
+            for (int j=0;j<visited.length;j++) {
+                visited[i][j]=false;
+            }
+        }
         this.maze=maze;
-        currentState=new MazeState(maze.getStartPosition());
-        startState=currentState;
+        startState=new MazeState(maze.getStartPosition());
+        changeState(startState);
         goalState=new MazeState(maze.getGoalPosition());
     }
 
     private boolean checkPositionMovable(Position move) {
-        return maze.PositionInMaze(move) && maze.getPositionValue(move)==0;
+        return maze.PositionInMaze(move) && maze.getPositionValue(move)==0 && !visited[move.getRowIndex()][move.getColumnIndex()];
     }
 
     private void addStraightState(int rowInc,int colInc,ArrayList<AState> lst) {
@@ -47,5 +54,17 @@ public class SearchableMaze implements ISearchable{
         addDiagonalState(-1,1,states);
         addDiagonalState(1,-1,states);
         return states;
+    }
+
+    @Override
+    public boolean isSolved() {
+        return currentState.equals(goalState);
+    }
+
+    @Override
+    public void changeState(AState state) {
+        currentState=(MazeState)state;
+        Position p = currentState.getPosition();
+        visited[p.getRowIndex()][p.getColumnIndex()]=true;
     }
 }
