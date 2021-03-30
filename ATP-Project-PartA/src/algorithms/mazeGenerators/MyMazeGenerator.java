@@ -34,15 +34,81 @@ public class MyMazeGenerator extends AMazeGenerator{
         Position start=randomEdge(maze);
         maze.setPositionValue(start,0);
         maze.setStart(start);
-
-
-
         Cell First = new Cell(start,GetMyNeibs(maze,start));
         Stack<Cell> stack = new Stack<Cell>();
         stack.push(First);
         DFS(maze,stack);
         maze.setGoal(new Position(8,8)); /////#######CHEckkkk
+        fixFrame(maze);
         return maze;
+    }
+
+
+    private int fixRows(Maze maze, int[] Line, int flag,int row) {
+        Random rand = new Random();
+        int counter = 0;
+        for (int i = 0; i < maze.getCols(); i++) {
+            if (Line[i] == 1)
+                counter++;
+        }
+        if (counter == maze.getCols() || counter == maze.getCols() - 1 ) { /////////////////bug
+            counter = 0;
+            for (int i = 0; i < maze.getCols(); i++) {
+                if (maze.getPositionValue(new Position(row, i)) == 0) {
+                    maze.setPositionValue(new Position(0, i), rand.nextInt(2));
+                    counter = 1;
+                }
+            }
+            return counter;
+        }
+        return  0;
+    }
+
+    private int fixLeftCols(Maze maze,int changes){
+        Random rand = new Random();
+        int [][] frame = maze.getMap();
+        int counter = 0;
+        for (int i = 0;i < maze.getRows(); i++) {
+            if (frame[i][0] == 1)
+                counter++;
+
+        }
+        if (counter == maze.getRows() - 1|| counter == maze.getRows()){
+            for (int i = 0;i < maze.getRows(); i++) {
+                if (maze.getPositionValue(new Position(i, 1)) == 0)
+                    maze.setPositionValue(new Position(i,0),rand.nextInt(2));
+            }
+            return 1;
+        }
+        return  0;
+    }
+    private int fixRightCols(Maze maze,int changes){
+        Random rand = new Random();
+        int [][] frame = maze.getMap();
+        int counter = 0;
+        for (int i = 0;i < maze.getRows(); i++) {
+            if (frame[i][maze.getCols()-1] == 1)
+                counter++;
+
+        }
+        if (counter == maze.getRows() - 1 || counter == maze.getRows()){
+            for (int i = 0;i < maze.getRows(); i++) {
+                if (maze.getPositionValue(new Position(i, maze.getCols()-2)) == 0)
+                    maze.setPositionValue(new Position(i,maze.getCols()-1),rand.nextInt(2));
+            }
+            return 1;
+        }
+        return  0;
+
+    }
+
+    private void fixFrame (Maze maze){
+        int flag = 0;
+        int [][] frame = maze.getMap();
+        flag += fixRows(maze,frame[0],flag,1);
+        flag += fixRows(maze,frame[maze.getRows()-1], flag,maze.getRows()-2);
+        flag += fixRightCols(maze,flag);
+        flag += fixLeftCols(maze,flag);
     }
 
     private void DFS(Maze maze, Stack<Cell> stack){
@@ -71,6 +137,7 @@ public class MyMazeGenerator extends AMazeGenerator{
         Position down = new Position(position.getRowIndex()+2,position.getColumnIndex());
         Position left = new Position(position.getRowIndex(),position.getColumnIndex()-2);
         Position right = new Position(position.getRowIndex(),position.getColumnIndex()+2);
+
         if (maze.IsValidMove(up))
             neibs.add(up);
         if (maze.IsValidMove(down))
