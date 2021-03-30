@@ -9,7 +9,7 @@ public abstract class AMazeGenerator implements IMazeGenerator{
         if (row > 0 && col >0 ){
             long time = System.currentTimeMillis();
             generate(row, col);
-            TotalTime = time - System.currentTimeMillis();
+            TotalTime = System.currentTimeMillis() - time;
         }
         else
             System.out.println("Number not in range");

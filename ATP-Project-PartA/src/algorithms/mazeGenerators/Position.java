@@ -1,5 +1,7 @@
 package algorithms.mazeGenerators;
 
+import javafx.geometry.Pos;
+
 public class Position {
     private int row;
     private int column;
@@ -20,6 +22,11 @@ public class Position {
         if (!(other instanceof Position))
             return false;
         return ((Position)other).row==this.row && ((Position)other).column==this.column;
+    }
+
+    public Position getBetween(Position p){
+        return new Position((p.getRowIndex()-row)/2+row,(p.getColumnIndex()-column)/2+column);
+
     }
 }
 

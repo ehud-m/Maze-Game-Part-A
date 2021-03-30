@@ -61,4 +61,23 @@ public class Maze {
             System.out.println("}");
         }
     }
+
+    public void setPositionValue(Position pos, int num) {
+        map[pos.getRowIndex()][pos.getColumnIndex()] = num;
+    }
+
+    public int getPositionValue(Position pos) {
+        return map[pos.getRowIndex()][pos.getColumnIndex()];
+    }
+
+    public boolean IsValidMove(Position position) {
+        if (PositionInMaze(position)) {
+            return (map[position.getRowIndex()][position.getColumnIndex()] == 1);
+        }
+        return false;
+    }
+
+    private boolean PositionInMaze(Position position) {
+        return (position.getColumnIndex() < cols && position.getRowIndex() < rows && position.getRowIndex() >= 0 && position.getColumnIndex() >= 0);
+    }
 }
