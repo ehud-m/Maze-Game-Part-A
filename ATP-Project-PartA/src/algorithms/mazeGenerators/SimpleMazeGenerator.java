@@ -17,19 +17,19 @@ public class SimpleMazeGenerator extends AMazeGenerator {
     }
 
     private void createRoad(Maze maze) {
-        Position start = new Position(0,maze.getCols()/2);
-        Position end= new Position(maze.getRows()/2,maze.getCols()-1);
+        Position start = new Position(0,maze.getCols()/4);
+        Position end= new Position(maze.getRows()-1,maze.getCols()/4*3);
         maze.setStart(start);
         maze.setGoal(end);
         int[][] map = maze.getMap();
-        int i=0, j = maze.getCols()/2;
+        int i=0, j = maze.getCols()/4;
         map[i][j]=0;
-        while (i!=maze.getRows()/2 && j!=maze.getCols()-1) {
-            if (i<maze.getRows()/2) {
+        while (i!=maze.getRows()-1 || j!=maze.getCols()/4*3) {
+            if (i<maze.getRows()-1) {
                 i++;
                 map[i][j]=0;
             }
-            if (j<maze.getCols()-1) {
+            if (j<maze.getCols()/4*3) {
                 j++;
                 map[i][j]=0;
             }

@@ -52,12 +52,13 @@ public class Maze {
     }
 
     public void print() {
-        for (int i=0;i<=map.length-1;i++) {
+        for (int i=0;i<map.length;i++) {
+            System.out.print("{ ");
             int j;
-            for (j=0;j<map[0].length-1;j++) {
+            for (j=0;j<map[0].length;j++) {
                 System.out.print(getCellString(i,j)+" ");
             }
-            System.out.println(getCellString(i,j));
+            System.out.println("}");
         }
     }
 }
