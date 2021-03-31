@@ -4,7 +4,6 @@ import algorithms.mazeGenerators.Position;
 
 public class MazeState extends AState{
     private Position p;
-    private MazeState father;
 
 
 
@@ -13,6 +12,7 @@ public class MazeState extends AState{
         this.p = p;
         this.father = null;
     }
+
 
 
     public Position getPosition() {
@@ -25,14 +25,8 @@ public class MazeState extends AState{
         return ((MazeState)other).getPosition().equals(p);
     }
 
-    public void setFather(Object other){
-        if (!(other instanceof MazeState))
-            return;
-        father = ((MazeState)other);
-    }
-
-    public MazeState getFather() {
-        return this.father;
+    public String toString() {
+        return "("+(p.getRowIndex()+1)+","+(p.getColumnIndex()+1)+")";
     }
 
  /*   public void print(){

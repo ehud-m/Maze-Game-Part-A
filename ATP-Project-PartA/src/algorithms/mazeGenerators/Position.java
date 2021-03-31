@@ -1,7 +1,5 @@
 package algorithms.mazeGenerators;
 
-
-
 public class Position {
     private int row;
     private int column;
