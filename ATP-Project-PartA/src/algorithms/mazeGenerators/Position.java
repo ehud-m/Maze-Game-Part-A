@@ -1,6 +1,6 @@
 package algorithms.mazeGenerators;
 
-import javafx.geometry.Pos;
+
 
 public class Position {
     private int row;

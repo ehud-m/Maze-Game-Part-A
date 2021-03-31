@@ -156,10 +156,4 @@ public class MyMazeGenerator extends AMazeGenerator{
 
     }
 
-    public static void main(String[] args) {
-        MyMazeGenerator m=new MyMazeGenerator();
-        Maze maze = m.generate(15,15);
-        maze.print();
-
-    }
 }

@@ -56,9 +56,39 @@ public class SearchableMaze implements ISearchable{
         return states;
     }
 
+
+
+    public MazeState getCurrentState() {
+        return currentState;
+    }
+
+
+    @Override
+    public MazeState getEnd() {
+        return goalState;
+    }
+
+    @Override
+    public MazeState getstart() {
+        return startState;
+    }
+
     @Override
     public boolean isSolved() {
         return currentState.equals(goalState);
+    }
+
+    public boolean isSolved(AState state) {
+        return ((MazeState)state).equals(goalState);
+    }
+
+    @Override
+    public boolean isVisit(AState state) {
+        return (visited[((MazeState)state).getPosition().getRowIndex()][((MazeState)state).getPosition().getColumnIndex()]);
+    }
+    public void visit(AState state){
+        visited[((MazeState)state).getPosition().getRowIndex()][((MazeState)state).getPosition().getColumnIndex()] = true;
+        ((MazeState)state).setFather(currentState);
     }
 
     @Override
@@ -67,4 +97,16 @@ public class SearchableMaze implements ISearchable{
         Position p = currentState.getPosition();
         visited[p.getRowIndex()][p.getColumnIndex()]=true;
     }
+
+    public MazeState getFather(){
+        if (currentState.getFather() != null)
+            return (currentState.getFather());
+        return null;
+    }
+
+
+
+
+
+
 }
