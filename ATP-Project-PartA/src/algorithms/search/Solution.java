@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Solution {
     private ArrayList<AState> path;
-    public Solution(ArrayList arr) {
-        path=arr;
+    public Solution(ArrayList<AState> sol) {
+        path=sol;
     }
     public ArrayList<AState> getSolutionPath() {
         return path;

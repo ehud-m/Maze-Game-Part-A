@@ -38,9 +38,18 @@ public class MyMazeGenerator extends AMazeGenerator{
         Stack<Cell> stack = new Stack<Cell>();
         stack.push(First);
         DFS(maze,stack);
-        maze.setGoal(new Position(8,8)); /////#######CHEckkkk
-        fixFrame(maze);
+        //maze.setGoal(new Position(8,8)); /////#######CHEckkkk
+        //fixFrame(maze);
+        setGoal(maze);
         return maze;
+    }
+    private void setGoal(Maze maze) {
+        Position p;
+        do {
+            p=randomEdge(maze);
+        }
+        while (maze.getPositionValue(p)!=0 || p.equals(maze.getStartPosition()));
+        maze.setGoal(p);
     }
 
 
@@ -106,7 +115,7 @@ public class MyMazeGenerator extends AMazeGenerator{
         int flag = 0;
         int [][] frame = maze.getMap();
         flag += fixRows(maze,frame[0],flag,1);
-        flag += fixRows(maze,frame[maze.getRows()-1], flag,maze.getRows()-2);
+                flag += fixRows(maze,frame[maze.getRows()-1], flag,maze.getRows()-2);
         flag += fixRightCols(maze,flag);
         flag += fixLeftCols(maze,flag);
     }
@@ -155,5 +164,4 @@ public class MyMazeGenerator extends AMazeGenerator{
 
 
     }
-
 }
