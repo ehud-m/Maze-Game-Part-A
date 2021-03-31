@@ -4,12 +4,6 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class DepthFirstSearch extends ASearchingAlgorithm {
-    private long numOfNodes;
-
-    public DepthFirstSearch() {
-        numOfNodes=0;
-    }
-
     @Override
     /*public Solution solve(ISearchable s) {
         ArrayList<AState> sol=new ArrayList<AState>();
@@ -36,8 +30,8 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
             s.changeState(current);
             if (s.isSolved())
                 break;
-            numOfNodes++;
-            ArrayList<AState> moves=s.getAllPossibleStates();
+            numberOfNodeEvaluated++;
+            ArrayList<AState> moves=s.getAllSuccessors();
             for (AState neib:moves) {
                 stack.push(neib);
             }
@@ -49,11 +43,11 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
         if (s.isSolved())
             return true;
         AState current=s.getCurrentState();
-        ArrayList<AState> moves=s.getAllPossibleStates();
+        ArrayList<AState> moves=s.getAllSuccessors();
         for (AState neib:
                 moves) {
             s.changeState(neib);
-            numOfNodes++;
+            numberOfNodeEvaluated++;
             sol.add(neib);
             if (DFS(s,sol))
                 return true;
@@ -72,6 +66,6 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
 
     @Override
     public long getNumberOfNodesEvaluated() {
-        return numOfNodes;
+        return numberOfNodeEvaluated;
     }
 }

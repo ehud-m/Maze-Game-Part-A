@@ -1,6 +1,6 @@
 package algorithms.search;
 
-import sun.misc.Queue;
+
 
 import java.util.*;
 
@@ -11,34 +11,29 @@ public class BreadthFirstSearch extends ASearchingAlgorithm
     protected Object queue;
     protected AState curr;
 
-    private long numberOfNodeEvaluated;
 
 
 
     public BreadthFirstSearch() {
-        queue = new Queue<AState>();
+        queue = new LinkedList<AState>();
         Alist = new ArrayList<>();
-        numberOfNodeEvaluated = 0;
     }
 
     @Override
     public Solution solve(ISearchable s) {
         BFS(s);
-        getSolution(s);
-        return (new Solution(Alist));
+
+        return (new Solution(getSolution(s)));
     }
 
     protected void enqueue(AState state){
-        ((Queue<AState>)queue).enqueue(state);
+        ((LinkedList<AState>)queue).add(state);
     }
 
     protected AState dequeue(){
-        try {
-            return ((Queue<AState>)queue).dequeue();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return null;
+
+        return ((LinkedList<AState>)queue).poll();
+
     }
 
     protected boolean isEmpty(){
@@ -49,38 +44,29 @@ public class BreadthFirstSearch extends ASearchingAlgorithm
     protected void BFS(ISearchable s){
         int flag = 0;
         curr = s.getstart();
+        numberOfNodeEvaluated++;
         enqueue(curr);
         while (!isEmpty()){
             curr = dequeue();
-            numberOfNodeEvaluated++;
+            //numberOfNodeEvaluated++;
             s.changeState(curr);
-            Alist = s.getAllPossibleStates();
+            Alist = s.getAllSuccessors();
             for (AState state: Alist ) {
-                if (!s.isVisit(state)) {
+                if (!isVisit(s,state)) {
                     s.visit(state);
                     numberOfNodeEvaluated++;
                     if (s.isSolved(state)) {
-                        flag = 1;
-                        s.changeState(state);
-                        break;
+                        //flag = 1;
+                        s.setGoalState(state);
+                        //numberOfNodeEvaluated++;
+                        //break;
                     }
                     enqueue(state);
                 }
             }
-            if (flag == 1)
-                break;
+        //    if (flag == 1)
+          //      break;
         }
-    }
-
-    private void getSolution(ISearchable s){
-        Alist.clear();
-        Alist.add(s.getCurrentState());
-        // s.changeState(s.getEnd());
-        while (s.getFather() != null){
-            Alist.add(s.getFather());
-            s.changeState(s.getFather());
-        }
-        Collections.reverse(Alist);
     }
 
     @Override
@@ -91,6 +77,11 @@ public class BreadthFirstSearch extends ASearchingAlgorithm
     @Override
     public long getNumberOfNodesEvaluated() {
         return numberOfNodeEvaluated;
+    }
+
+    protected boolean isVisit(ISearchable s,AState state){
+        return s.isVisit(state);
+
     }
 }
 

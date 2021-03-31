@@ -1,7 +1,5 @@
 package algorithms.search;
 
-import sun.misc.Queue;
-
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 
@@ -33,6 +31,9 @@ public class BestFirstSearch extends BreadthFirstSearch {
     protected boolean isEmpty(){
         boolean res = (((PriorityQueue<AState>)queue).isEmpty());
         return res;
+    }
+    protected boolean isVisit(ISearchable s,AState state){
+        return false;
     }
 
     @Override

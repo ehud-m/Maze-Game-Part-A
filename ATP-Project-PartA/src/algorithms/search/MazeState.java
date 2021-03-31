@@ -5,14 +5,24 @@ import algorithms.mazeGenerators.Position;
 public class MazeState extends AState{
     private Position p;
 
+    private int positionValue;
 
 
 
-    public MazeState(Position p) {
+    public MazeState(Position p,int positionValue) {
         this.p = p;
+        this.positionValue = positionValue;
         this.father = null;
     }
 
+    public int getPositionValue() {
+        return positionValue;
+    }
+    public MazeState(Position p) {
+        this.p = p;
+        this.positionValue = 0;
+        this.father = null;
+    }
 
 
     public Position getPosition() {

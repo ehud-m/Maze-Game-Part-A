@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public abstract class ASearchingAlgorithm implements ISearchingAlgorithm {
+    protected long numberOfNodeEvaluated;
+    public ASearchingAlgorithm() {
+        numberOfNodeEvaluated=0;
+    }
     protected ArrayList<AState> getSolution(ISearchable s){
         ArrayList<AState> lst = new ArrayList<AState>();
         lst.add(s.getCurrentState());

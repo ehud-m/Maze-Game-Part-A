@@ -1,5 +1,5 @@
 package algorithms.search;
-
+import java.util.Comparator;
 import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.Position;
 
@@ -23,6 +23,7 @@ public class SearchableMaze implements ISearchable{
         startState=new MazeState(maze.getStartPosition());
         changeState(startState);
         goalState=new MazeState(maze.getGoalPosition());
+        goalState.setPositionValue(-1);
     }
 
     private boolean checkPositionMovable(Position move) {
@@ -33,7 +34,7 @@ public class SearchableMaze implements ISearchable{
         Position cur=currentState.getPosition();
         Position move=new Position(cur.getRowIndex()+rowInc,cur.getColumnIndex()+colInc);
         if (checkPositionMovable(move)) {
-            MazeState state = new MazeState(move);
+            MazeState state = new MazeState(move,currentState.getPositionValue()+10);
             state.setFather(currentState);
             lst.add(state);
         }
@@ -44,12 +45,15 @@ public class SearchableMaze implements ISearchable{
         Position vert=new Position(cur.getRowIndex()+rowInc,cur.getColumnIndex());
         Position horiz=new Position(cur.getRowIndex(),cur.getColumnIndex()+colInc);
         if (checkPositionMovable(diag) && (checkPositionMovable(vert) || checkPositionMovable(horiz))) {
-            MazeState state = new MazeState(diag);
+            MazeState state = new MazeState(diag,currentState.getPositionValue()+15);
             state.setFather(currentState);
             lst.add(state);
         }
     }
-    public ArrayList<AState> getAllPossibleStates() {
+    public Comparator<AState> getComperator(){
+        return new MazeStateComparator();
+    }
+    public ArrayList<AState> getAllSuccessors() {
         ArrayList<AState> states= new ArrayList<AState>();
         addStraightState(-1,0,states);
         addDiagonalState(-1,1,states);
@@ -62,12 +66,9 @@ public class SearchableMaze implements ISearchable{
         return states;
     }
 
-
-
     public MazeState getCurrentState() {
         return currentState;
     }
-
 
     @Override
     public MazeState getEnd() {
@@ -94,6 +95,7 @@ public class SearchableMaze implements ISearchable{
     }
     public void visit(AState state){
         visited[((MazeState)state).getPosition().getRowIndex()][((MazeState)state).getPosition().getColumnIndex()] = true;
+        //state.setFather(currentState);
     }
 
     @Override
@@ -109,9 +111,10 @@ public class SearchableMaze implements ISearchable{
         return null;
     }
 
-
-
-
-
-
+    @Override
+    public void setGoalState(AState state) {
+        if (((MazeState)state).getPositionValue() < goalState.getPositionValue() || goalState.getPositionValue() == -1){
+            goalState = ((MazeState) state);
+        }
+    }
 }

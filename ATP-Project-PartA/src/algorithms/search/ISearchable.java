@@ -1,12 +1,13 @@
 package algorithms.search;
 
 import java.util.ArrayList;
-
+import java.util.Comparator;
 public interface ISearchable {
-    public ArrayList<AState> getAllPossibleStates();
+    public ArrayList<AState> getAllSuccessors();
 
     public AState getCurrentState();
 
+    public Comparator<AState> getComperator();
     public AState getEnd();
 
     public AState getstart();
@@ -22,5 +23,7 @@ public interface ISearchable {
     public void visit(AState state);
 
     public AState getFather();
+
+    void setGoalState(AState state);
 }
 
