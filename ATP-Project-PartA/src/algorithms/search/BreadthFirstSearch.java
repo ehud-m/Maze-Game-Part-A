@@ -2,41 +2,56 @@ package algorithms.search;
 
 import sun.misc.Queue;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 public class BreadthFirstSearch extends ASearchingAlgorithm
 {
     //private AState pai;
-    private ArrayList<AState> Alist;
-    private LinkedList<AState> queue;
-    private AState curr;
+    protected ArrayList<AState> Alist;
+    protected Object queue;
+    protected AState curr;
+
     private long numberOfNodeEvaluated;
 
 
 
     public BreadthFirstSearch() {
-
+        queue = new Queue<AState>();
         Alist = new ArrayList<>();
         numberOfNodeEvaluated = 0;
     }
 
     @Override
     public Solution solve(ISearchable s) {
-        queue = new LinkedList<AState>();
         BFS(s);
         getSolution(s);
         return (new Solution(Alist));
     }
 
-    private void BFS(ISearchable s){
+    protected void enqueue(AState state){
+        ((Queue<AState>)queue).enqueue(state);
+    }
+
+    protected AState dequeue(){
+        try {
+            return ((Queue<AState>)queue).dequeue();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    protected boolean isEmpty(){
+        boolean res = (((Queue<AState>)queue).isEmpty());
+        return res;
+    }
+
+    protected void BFS(ISearchable s){
         int flag = 0;
         curr = s.getstart();
-        queue.addLast(curr);
-        while (!queue.isEmpty()){
-            curr = queue.pollFirst();
+        enqueue(curr);
+        while (!isEmpty()){
+            curr = dequeue();
             numberOfNodeEvaluated++;
             s.changeState(curr);
             Alist = s.getAllPossibleStates();
@@ -49,7 +64,7 @@ public class BreadthFirstSearch extends ASearchingAlgorithm
                         s.changeState(state);
                         break;
                     }
-                    queue.addLast(state);
+                    enqueue(state);
                 }
             }
             if (flag == 1)

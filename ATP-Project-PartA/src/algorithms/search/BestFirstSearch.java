@@ -2,16 +2,41 @@ package algorithms.search;
 
 import sun.misc.Queue;
 
+import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 public class BestFirstSearch extends BreadthFirstSearch {
 
-    private PriorityQueue<AState> queue;
-
 
     public BestFirstSearch() {
-        this.queue = new PriorityQueue<AState>();
+
+        Alist = new ArrayList<>();
+      //  numberOfNodeEvaluated = 0;
     }
 
+    @Override
+    public Solution solve(ISearchable s) {
+        queue = new PriorityQueue<AState>(11,s.getComperator());
+        return super.solve(s);
+    }
 
+    protected void enqueue(AState state){
+        ((PriorityQueue<AState>)queue).add(state);
+    }
+
+    protected AState dequeue(){
+
+        return ((PriorityQueue<AState>)queue).poll();
+
+    }
+
+    protected boolean isEmpty(){
+        boolean res = (((PriorityQueue<AState>)queue).isEmpty());
+        return res;
+    }
+
+    @Override
+    public String getName() {
+        return "Best First Search";
+    }
 }
