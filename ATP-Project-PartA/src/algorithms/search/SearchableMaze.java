@@ -6,36 +6,36 @@ import algorithms.mazeGenerators.Position;
 import java.util.ArrayList;
 
 public class SearchableMaze implements ISearchable{
-    private boolean[][] visited;
+    private MazeState[][] visited;
     private MazeState startState;
     private MazeState goalState;
     private MazeState currentState;
     private Maze maze;
 
     public SearchableMaze(Maze maze) {
-        visited=new boolean[maze.getRows()][maze.getCols()];
+        visited=new MazeState[maze.getRows()][maze.getCols()];
         for (int i=0;i<visited.length;i++) {
             for (int j=0;j<visited.length;j++) {
-                visited[i][j]=false;
+                visited[i][j]=new MazeState(new Position(i,j),-1);
             }
         }
         this.maze=maze;
-        startState=new MazeState(maze.getStartPosition());
+        startState=visited[maze.getStartPosition().getRowIndex()][maze.getStartPosition().getColumnIndex()];
         changeState(startState);
-        goalState=new MazeState(maze.getGoalPosition());
+        startState.setPositionValue(0);
+        goalState=visited[maze.getGoalPosition().getRowIndex()][maze.getGoalPosition().getColumnIndex()];
         goalState.setPositionValue(-1);
     }
 
     private boolean checkPositionMovable(Position move) {
-        return maze.PositionInMaze(move) && maze.getPositionValue(move)==0 && !visited[move.getRowIndex()][move.getColumnIndex()];
+        return maze.PositionInMaze(move) && maze.getPositionValue(move)==0;// && !visited[move.getRowIndex()][move.getColumnIndex()].isVisited();
     }
 
     private void addStraightState(int rowInc,int colInc,ArrayList<AState> lst) {
         Position cur=currentState.getPosition();
         Position move=new Position(cur.getRowIndex()+rowInc,cur.getColumnIndex()+colInc);
         if (checkPositionMovable(move)) {
-            MazeState state = new MazeState(move,currentState.getPositionValue()+10);
-            state.setFather(currentState);
+            MazeState state = visited[move.getRowIndex()][move.getColumnIndex()];
             lst.add(state);
         }
     }
@@ -45,8 +45,7 @@ public class SearchableMaze implements ISearchable{
         Position vert=new Position(cur.getRowIndex()+rowInc,cur.getColumnIndex());
         Position horiz=new Position(cur.getRowIndex(),cur.getColumnIndex()+colInc);
         if (checkPositionMovable(diag) && (checkPositionMovable(vert) || checkPositionMovable(horiz))) {
-            MazeState state = new MazeState(diag,currentState.getPositionValue()+15);
-            state.setFather(currentState);
+            MazeState state = visited[diag.getRowIndex()][diag.getColumnIndex()];
             lst.add(state);
         }
     }
@@ -91,18 +90,35 @@ public class SearchableMaze implements ISearchable{
 
     @Override
     public boolean isVisit(AState state) {
-        return (visited[((MazeState)state).getPosition().getRowIndex()][((MazeState)state).getPosition().getColumnIndex()]);
+        return (visited[((MazeState)state).getPosition().getRowIndex()][((MazeState)state).getPosition().getColumnIndex()].isVisited());
     }
     public void visit(AState state){
-        visited[((MazeState)state).getPosition().getRowIndex()][((MazeState)state).getPosition().getColumnIndex()] = true;
-        //state.setFather(currentState);
+        visited[((MazeState)state).getPosition().getRowIndex()][((MazeState)state).getPosition().getColumnIndex()].setVisited();
+        if (!state.equals(currentState)) {
+            state.setFather(currentState);
+            ((MazeState)state).setPositionValue((currentState.getPositionValue()+getNeibPrice(state)));
+        }
+    }
+
+    public int getNeibPrice(AState state) {
+        Position other = ((MazeState)state).getPosition();
+        int rowVal = Math.abs(currentState.getPosition().getRowIndex()-other.getRowIndex());
+        int colVal = Math.abs(currentState.getPosition().getColumnIndex()-other.getColumnIndex());
+        if (rowVal > 1 || colVal > 1 )
+            return -1;
+        if ( rowVal + colVal == 1 )
+            return 10;
+        else if ( rowVal + colVal == 2 )
+            return 15;
+
+        return -1;
     }
 
     @Override
     public void changeState(AState state) {
         currentState=(MazeState)state;
         Position p = currentState.getPosition();
-        visited[p.getRowIndex()][p.getColumnIndex()]=true;
+   ///     visited[p.getRowIndex()][p.getColumnIndex()].setVisited();
     }
 
     public AState getFather(){

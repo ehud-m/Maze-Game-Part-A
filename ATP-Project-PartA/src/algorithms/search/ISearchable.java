@@ -23,6 +23,7 @@ public interface ISearchable {
     public void visit(AState state);
 
     public AState getFather();
+    public int getNeibPrice(AState state);
 
     void setGoalState(AState state);
 }
