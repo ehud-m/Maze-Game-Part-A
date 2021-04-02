@@ -1,6 +1,6 @@
 package maze3D;
 
-public class Maze {
+public class Maze3D {
     private Position3D start;
     private Position3D goal;
     private int rows;
@@ -8,7 +8,7 @@ public class Maze {
     private int depth;
     private int[][][] map3D;
 
-    public Maze(int depth,int rows, int cols) {
+    public Maze3D(int depth,int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
         this.depth = depth;
