@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 public interface ISearchable {
     public ArrayList<AState> getAllSuccessors();
-
+    void clear();
     public AState getCurrentState();
 
     public Comparator<AState> getComperator();

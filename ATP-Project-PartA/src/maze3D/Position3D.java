@@ -22,7 +22,7 @@ public class Position3D {
     }
 
     public boolean equals(Object other) {
-        if (!(other instanceof Position))
+        if (!(other instanceof Position3D))
             return false;
         return ((Position3D)other).depth==this.depth && ((Position3D)other).row==this.row && ((Position3D)other).column==this.column;
     }

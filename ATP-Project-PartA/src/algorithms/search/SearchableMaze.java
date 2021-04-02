@@ -69,6 +69,18 @@ public class SearchableMaze implements ISearchable{
         return currentState;
     }
 
+    public void clear() {
+        for (int j = 0; j < maze.getRows(); j++) {
+            for (int k = 0; k < maze.getCols(); k++) {
+                if (visited[j][k]!=null) {
+                    visited[j][k].setFather(null);
+                    visited[j][k].setVisited(false);
+                    visited[j][k].setPositionValue(0);
+                }
+            }
+        }
+    }
+
     @Override
     public MazeState getEnd() {
         return goalState;
@@ -93,7 +105,7 @@ public class SearchableMaze implements ISearchable{
         return (visited[((MazeState)state).getPosition().getRowIndex()][((MazeState)state).getPosition().getColumnIndex()].isVisited());
     }
     public void visit(AState state){
-        visited[((MazeState)state).getPosition().getRowIndex()][((MazeState)state).getPosition().getColumnIndex()].setVisited();
+        visited[((MazeState)state).getPosition().getRowIndex()][((MazeState)state).getPosition().getColumnIndex()].setVisited(true);
         if (!state.equals(currentState)) {
             state.setFather(currentState);
             ((MazeState)state).setPositionValue((currentState.getPositionValue()+getNeibPrice(state)));

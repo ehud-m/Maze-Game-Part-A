@@ -30,7 +30,7 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
             if (s.isVisit(current) && !s.getstart().equals(current))
                 continue;
             s.changeState(current);
-            current.setVisited();
+            current.setVisited(true);
             if (s.isSolved())
                 break;
             numberOfNodeEvaluated++;

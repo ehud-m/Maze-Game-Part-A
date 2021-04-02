@@ -18,12 +18,29 @@ public class SearchableMaze3D implements ISearchable {
     private Maze3DState currentState;
     private Maze3D maze;
 
+    public void clear() {
+        for (int i = 0; i < maze.getDepth(); i++) {
+            for (int j = 0; j < maze.getRows(); j++) {
+                for (int k = 0; k < maze.getCols(); k++) {
+                    if (visited[i][j][k]!=null) {
+                        visited[i][j][k].setFather(null);
+                        visited[i][j][k].setVisited(false);
+                        visited[i][j][k].setPositionValue(0);
+                    }
+                }
+            }
+        }
+    }
     public SearchableMaze3D(Maze3D maze) {
+        int[][][] map = maze.getMap();
         visited=new Maze3DState[maze.getDepth()][maze.getRows()][maze.getCols()];
         for (int i=0;i<maze.getDepth();i++) {
             for (int j=0;j<maze.getRows();j++) {
                 for (int k = 0; k <maze.getCols() ; k++) {
-                    visited[i][j][k] = new Maze3DState(new Position3D(i,j,k),-1);
+                    if (map[i][j][k]==0)
+                        visited[i][j][k] = new Maze3DState(new Position3D(i,j,k),-1);
+                    else
+                        visited[i][j][k]=null;
                 }
             }
         }
@@ -92,7 +109,7 @@ public class SearchableMaze3D implements ISearchable {
         return (visited[((Maze3DState)state).getPosition().getDepthIndex()][((Maze3DState)state).getPosition().getRowIndex()][((Maze3DState)state).getPosition().getColumnIndex()].isVisited());
     }
     public void visit(AState state){
-        visited[((Maze3DState)state).getPosition().getDepthIndex()][((Maze3DState)state).getPosition().getRowIndex()][((Maze3DState)state).getPosition().getColumnIndex()].setVisited();
+        visited[((Maze3DState)state).getPosition().getDepthIndex()][((Maze3DState)state).getPosition().getRowIndex()][((Maze3DState)state).getPosition().getColumnIndex()].setVisited(true);
         if (!state.equals(currentState)) {
             state.setFather(currentState);
             ((Maze3DState)state).setPositionValue((currentState.getPositionValue()+getNeibPrice(state)));

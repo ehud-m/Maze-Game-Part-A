@@ -1,5 +1,7 @@
 package maze3D;
 
+import algorithms.mazeGenerators.MyMazeGenerator;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
@@ -8,6 +10,11 @@ import java.util.Stack;
 
 public class MyMaze3DGenerator extends AMaze3DGenerator{
 
+    private Random rnd;
+
+    public MyMaze3DGenerator() {
+        rnd=new Random();
+    }
     private Position3D randomEdge(Maze3D maze) {
         Random rand=new Random();
         int edge = rand.nextInt(6);
@@ -40,15 +47,18 @@ public class MyMaze3DGenerator extends AMaze3DGenerator{
     }
     @Override
     public Maze3D generate(int depth,int row, int col) {
+        int stepSize = 2;
+        if (depth*row*col>1000000)
+            stepSize = 3;
         Maze3D maze = new Maze3D(depth,row,col);
         InitBoard(maze,1);
         Position3D start=randomEdge(maze);
         maze.setPositionValue(start,0);
         maze.setStart(start);
-        Cell3D First = new Cell3D(start,GetMyNeibs(maze,start));
+        Cell3D First = new Cell3D(start,GetMyNeibs(maze.getMap(),start,stepSize));
         Stack<Cell3D> stack = new Stack<Cell3D>();
         stack.push(First);
-        DFS(maze,stack);
+        DFS(maze,stack,stepSize);
         //maze.setGoal(new Position(8,8)); /////#######CHEckkkk
         //fixFrame(maze);
         setGoal(maze);
@@ -131,10 +141,11 @@ public class MyMaze3DGenerator extends AMaze3DGenerator{
         flag += fixLeftCols(maze,flag);
     }
 */
-    private void DFS(Maze3D maze, Stack<Cell3D> stack){
+    private void DFS(Maze3D maze, Stack<Cell3D> stack,int stepSize){
         //null check
         int [][][] map = maze.getMap();
         int posD,posR,posC,curD,curR,curC;
+
         while(!stack.isEmpty()){
             Cell3D currentCell = stack.pop();
             if (currentCell.HaveNeighbours()){
@@ -152,48 +163,56 @@ public class MyMaze3DGenerator extends AMaze3DGenerator{
                        // stack.push(currentCell);
 
                         map[posD][posR][posC]=0;
-                        map[(posD-curD)/2+curD][(posR-curR)/2+curR][(posC-curC)/2+curC]=0;
+                        if (stepSize==3) {
+                            map[(posD - curD) / 3 * 2 + curD][(posR - curR) / 3 * 2 + curR][(posC - curC) / 3 * 2 + curC] = 0;
+                            map[(posD - curD) / 3 + curD][(posR - curR) / 3 + curR][(posC - curC) / 3 + curC] = 0;
+                        }/*
+                        if (stepSize==4) {
+                            map[(posD-curD)/2+curD][(posR-curR)/2+curR][(posC-curC)/2+curC]=0;
+                            map[(posD-curD)/4+curD][(posR-curR)/4+curR][(posC-curC)/4+curC]=0;
+                            map[(posD-curD)/4*3+curD][(posR-curR)/4*3+curR][(posC-curC)/4*3+curC]=0;
+                        }*/
+                        else
+                            map[(posD-curD)/2+curD][(posR-curR)/2+curR][(posC-curC)/2+curC]=0;
+                        /*map[(posD-curD)/2+curD][(posR-curR)/2+curR][(posC-curC)/2+curC]=0;
+                        map[(posD-curD)/4+curD][(posR-curR)/4+curR][(posC-curC)/4+curC]=0;
+                        map[(posD-curD)/4*3+curD][(posR-curR)/4*3+curR][(posC-curC)/4*3+curC]=0;*/
                        // maze.setPositionValue(pos,0);
                        // maze.setPositionValue(currentCell.getPosition().getBetween(pos),0);
-                        stack.push(new Cell3D(pos,GetMyNeibs(maze,pos)));
+                        stack.push(new Cell3D(pos,GetMyNeibs(map,pos,stepSize)));
                     }
                 }
             }
         }
     }
 
-    private LinkedList<Position3D> GetMyNeibs(Maze3D maze , Position3D position){
-        if (position == null || maze == null)
+    private LinkedList<Position3D> GetMyNeibs(int[][][] map , Position3D position,int stepSize){
+        if (position == null)
             return null;
         int posD,posR,posC;
         posD=position.getDepthIndex();
         posR=position.getRowIndex();
         posC=position.getColumnIndex();
         LinkedList<Position3D> neibs = new LinkedList<Position3D>();
-        Position3D up = new Position3D( posD,posR-2,posC);
+        /*Position3D up = new Position3D( posD,posR-2,posC);
         Position3D down = new Position3D(posD,posR+2,posC);
         Position3D left = new Position3D(posD,posR,posC-2);
         Position3D right = new Position3D(posD,posR,posC+2);
         Position3D in = new Position3D( posD+2,posR,posC);
-        Position3D out = new Position3D(posD-2,posR,posC);
-
-        if (maze.IsValidMove(up))
-            neibs.add(up);
-        if (maze.IsValidMove(down))
-            neibs.add(down);
-        if (maze.IsValidMove(left))
-            neibs.add(left);
-        if (maze.IsValidMove(right))
-            neibs.add(right);
-        if (maze.IsValidMove(in))
-            neibs.add(in);
-        if (maze.IsValidMove(out))
-            neibs.add(out);
-     //   Collections.shuffle(neibs,new Random());
-
-        while(neibs.size()>3)
-            neibs.pop();
-
+        Position3D out = new Position3D(posD-2,posR,posC);*/
+        if (posD+stepSize<map.length && map[posD+stepSize][posR][posC]==1)
+            neibs.add(new Position3D(posD+stepSize,posR,posC));
+        if (posD-stepSize>=0 && map[posD-stepSize][posR][posC]==1)
+            neibs.add(new Position3D(posD-stepSize,posR,posC));
+        if (posR+stepSize<map[0].length  && map[posD][posR+stepSize][posC]==1)
+            neibs.add(new Position3D(posD,posR+stepSize,posC));
+        if ( posR-stepSize>=0 && map[posD][posR-stepSize][posC]==1)
+            neibs.add(new Position3D(posD,posR-stepSize,posC));
+        if ( posC+stepSize <map[0][0].length && map[posD][posR][posC+stepSize]==1)
+            neibs.add(new Position3D(posD,posR,posC+stepSize));
+        if (posC-stepSize >=0 && map[posD][posR][posC-stepSize]==1)
+            neibs.add(new Position3D(posD,posR,posC-stepSize));
+        Collections.shuffle(neibs,rnd);
         return neibs;
 
 

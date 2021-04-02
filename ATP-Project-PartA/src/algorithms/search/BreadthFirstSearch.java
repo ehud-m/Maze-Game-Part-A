@@ -56,6 +56,7 @@ public class BreadthFirstSearch extends ASearchingAlgorithm
 
     protected void BFS(){
       //  int flag = 0;
+        int a=1;
         curr = s.getstart();
         numberOfNodeEvaluated++;
         enqueue(curr);
@@ -69,7 +70,8 @@ public class BreadthFirstSearch extends ASearchingAlgorithm
             //    checkSuccessors();
             for (AState state: Alist ) {
                 enqueue(state);
-
+                if (s.isSolved(state))
+                   a=0;
 
                 //    else
                 //       clean(state);

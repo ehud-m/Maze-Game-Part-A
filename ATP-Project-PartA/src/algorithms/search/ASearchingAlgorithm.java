@@ -19,6 +19,7 @@ public abstract class ASearchingAlgorithm implements ISearchingAlgorithm {
             s.changeState(s.getFather());
         }
         Collections.reverse(lst);
+        s.clear();
         return lst;
     }
 
