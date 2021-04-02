@@ -15,12 +15,12 @@ public class RunSearchOnMaze {
         maze.setStart(new Position(0,0));
       //  maze.print();
         SearchableMaze searchableMaze = new SearchableMaze(maze);
-        //solveProblem(searchableMaze, new BreadthFirstSearch());
+        solveProblem(searchableMaze, new BreadthFirstSearch());
 
         //searchableMaze = new SearchableMaze(maze);
         //solveProblem(searchableMaze, new DepthFirstSearch());
-        //searchableMaze = new SearchableMaze(maze);
-        solveProblem(searchableMaze, new BestFirstSearch());
+     //   searchableMaze = new SearchableMaze(maze);
+     //   solveProblem(searchableMaze, new BestFirstSearch());
 
     }
     private static void solveProblem(ISearchable domain, ISearchingAlgorithm
@@ -33,11 +33,12 @@ public class RunSearchOnMaze {
 //Printing Solution Path
                 System.out.println("Solution path:");
         ArrayList<AState> solutionPath = solution.getSolutionPath();
-        for (int i = 0; i < solutionPath.size(); i++) {
+      /*  for (int i = 0; i < solutionPath.size(); i++) {
             System.out.println(String.format("%s. %s",i,solutionPath.get(i)));
-        }
+        }*/
 
         System.out.println("Solution's length:" + solutionPath.size());
-        System.out.println("The algorithm took "+time+" milliseconds");
+        System.out.println("The algorithm took "+((double)time/1000)+" Seconds"+solutionPath.get(solutionPath.size()-1));
+
     }
 }

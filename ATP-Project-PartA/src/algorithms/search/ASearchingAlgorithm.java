@@ -11,7 +11,8 @@ public abstract class ASearchingAlgorithm implements ISearchingAlgorithm {
     }
     protected ArrayList<AState> getSolution(ISearchable s){
         ArrayList<AState> lst = new ArrayList<AState>();
-        lst.add(s.getCurrentState());
+        s.changeState(s.getEnd());
+        lst.add(s.getEnd());
         // s.changeState(s.getEnd());
         while (s.getFather() != null){
             lst.add(s.getFather());
@@ -20,4 +21,5 @@ public abstract class ASearchingAlgorithm implements ISearchingAlgorithm {
         Collections.reverse(lst);
         return lst;
     }
+
 }
