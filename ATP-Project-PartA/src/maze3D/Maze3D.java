@@ -78,16 +78,16 @@ public class Maze3D {
     }
 
     public void setPositionValue(Position3D pos, int num) {
-        map3D[pos.getDepthIndex][pos.getRowIndex()][pos.getColumnIndex()] = num;
+        map3D[pos.getDepthIndex()][pos.getRowIndex()][pos.getColumnIndex()] = num;
     }
 
     public int getPositionValue(Position3D pos) {
-        return map3D[pos.getDepthIndex][pos.getRowIndex()][pos.getColumnIndex()];
+        return map3D[pos.getDepthIndex()][pos.getRowIndex()][pos.getColumnIndex()];
     }
 
     public boolean IsValidMove(Position3D position) {
         if (PositionInMaze(position)) {
-            return (map3D[position.getDepthIndex][position.getRowIndex()][position.getColumnIndex()] == 1);
+            return (map3D[position.getDepthIndex()][position.getRowIndex()][position.getColumnIndex()] == 1);
         }
         return false;
     }
