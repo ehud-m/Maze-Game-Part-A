@@ -57,17 +57,18 @@ public class Maze3D {
 
     public void print() {
         System.out.println("{");
-        for (int i=0;i<map3D.length;i++) {
+        for (int i=0;i<depth;i++) {
             int j;
-            for (j=0;j<map3D[0].length;j++) {
+            for (j=0;j<rows;j++) {
                 int k;
                 System.out.print("{ ");
-                for(k=0;k<map3D[0][0].length;k++){
+                for(k=0;k<cols;k++){
                     System.out.print(getCellString(i,j,k)+" ");
                 }
-                System.out.print(" }");
+                System.out.println("}");
             }
-            if (i != map3D.length-1) {
+            if (i != depth-1) {
+                //System.out.println();
                 for (int z = 0; z < cols * 2 + 3; z++)
                     System.out.print("-");
                 System.out.println();
