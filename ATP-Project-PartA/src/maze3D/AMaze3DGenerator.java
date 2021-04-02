@@ -4,13 +4,13 @@ import algorithms.mazeGenerators.Maze;
 
 import java.util.Arrays;
 
-public class AMaze3DGenerator implements IMazeGenerator3D {
+public abstract class AMaze3DGenerator implements IMazeGenerator3D {
 
     public long measureAlgorithmTimeMillis (int depth,int row,int col){
         long TotalTime = 0;
         if (row > 0 && col >0 ){
             long time = System.currentTimeMillis();
-            generate(row, col);
+            generate(depth,row, col);
             TotalTime = System.currentTimeMillis() - time;
         }
         else
@@ -32,4 +32,4 @@ public class AMaze3DGenerator implements IMazeGenerator3D {
     }
 
 }
-}
+
