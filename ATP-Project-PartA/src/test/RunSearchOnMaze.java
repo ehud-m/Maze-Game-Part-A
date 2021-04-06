@@ -3,6 +3,7 @@ import algorithms.mazeGenerators.*;
 import algorithms.search.*;
 import maze3D.Maze3D;
 import maze3D.MyMaze3DGenerator;
+import maze3D.Position3D;
 import maze3D.SearchableMaze3D;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class RunSearchOnMaze {
 
         MyMaze3DGenerator mg = new MyMaze3DGenerator();
 
-        Maze3D maze = mg.generate(500,500, 500);
+        Maze3D maze = mg.generate(300,300, 300);
         SearchableMaze3D searchableMaze = new SearchableMaze3D(maze);
  //       maze.setGoal(new Position(9,9));
   //      maze.setStart(new Position(0,0));

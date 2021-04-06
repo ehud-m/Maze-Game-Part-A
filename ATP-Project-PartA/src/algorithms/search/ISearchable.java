@@ -25,6 +25,5 @@ public interface ISearchable {
     public AState getFather();
     public int getNeibPrice(AState state);
 
-    void setGoalState(AState state);
 }
 

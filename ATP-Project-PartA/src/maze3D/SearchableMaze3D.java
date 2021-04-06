@@ -132,11 +132,4 @@ public class SearchableMaze3D implements ISearchable {
             return (currentState.getFather());
         return null;
     }
-
-    @Override
-    public void setGoalState(AState state) {
-        if (((Maze3DState)state).getPositionValue() < goalState.getPositionValue() || goalState.getPositionValue() == -1){
-            goalState = ((Maze3DState) state);
-        }
-    }
 }
