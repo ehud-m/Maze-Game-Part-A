@@ -70,6 +70,14 @@ public class Maze {
         return map[pos.getRowIndex()][pos.getColumnIndex()];
     }
 
+    public void setPositionValue(int row, int col, int num) {
+        map[row][col] = num;
+    }
+
+    public int getPositionValue(int row, int col) {
+        return map[row][col];
+    }
+
     public boolean IsValidMove(Position position) {
         if (PositionInMaze(position)) {
             return (map[position.getRowIndex()][position.getColumnIndex()] == 1);
@@ -79,5 +87,9 @@ public class Maze {
 
     public boolean PositionInMaze(Position position) {
         return (position.getColumnIndex() < cols && position.getRowIndex() < rows && position.getRowIndex() >= 0 && position.getColumnIndex() >= 0);
+    }
+
+    public boolean PositionInMaze(int row, int col) {
+        return (col < cols && row < rows && row >= 0 && col >= 0);
     }
 }

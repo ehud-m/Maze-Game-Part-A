@@ -7,8 +7,13 @@ import java.util.Stack;
 
 
 public class MyMazeGenerator extends AMazeGenerator{
+    private Random rand;
+
+    public MyMazeGenerator() {
+        rand=new Random();
+    }
+
     private Position randomEdge(Maze maze) {
-        Random rand=new Random();
         int edge = rand.nextInt(4);
         int row,col;
         if (edge<=1) { //Top or Bottom edge
@@ -39,7 +44,7 @@ public class MyMazeGenerator extends AMazeGenerator{
         stack.push(First);
         DFS(maze,stack);
         //maze.setGoal(new Position(8,8)); /////#######CHEckkkk
-        //fixFrame(maze);
+        fixFrame(maze);
         setGoal(maze);
         return maze;
     }
@@ -52,7 +57,7 @@ public class MyMazeGenerator extends AMazeGenerator{
         maze.setGoal(p);
     }
 
-
+/*
     private int fixRows(Maze maze, int[] Line, int flag,int row) {
         Random rand = new Random();
         int counter = 0;
@@ -109,16 +114,61 @@ public class MyMazeGenerator extends AMazeGenerator{
         }
         return  0;
 
-    }
+    }*/
 
     private void fixFrame (Maze maze){
-        int flag = 0;
-        int [][] frame = maze.getMap();
-        flag += fixRows(maze,frame[0],flag,1);
-                flag += fixRows(maze,frame[maze.getRows()-1], flag,maze.getRows()-2);
-        flag += fixRightCols(maze,flag);
-        flag += fixLeftCols(maze,flag);
+        if (checkLineOnes(maze,0,0,1,0))
+            fixLine(maze,0,0,1,0);
+        if (checkLineOnes(maze,maze.getRows()-1,0,1,0))
+            fixLine(maze,maze.getRows()-1,0,1,0);
+        if (checkLineOnes(maze,0,0,0,1))
+            fixLine(maze,0,0,0,1);
+        if (checkLineOnes(maze,0,maze.getCols()-1,0,1))
+            fixLine(maze,0,maze.getCols()-1,0,1);
     }
+    private boolean checkLineOnes(Maze maze,int rowInd,int colInd,int checkRow, int checkCol) {
+        int size;
+        if (checkCol==1)
+            size=maze.getRows();
+        else
+            size=maze.getCols();
+        for (int i = 1; i < size-1; i++) {
+            if (maze.getPositionValue(rowInd+i*checkCol,colInd+i*checkRow)==0)
+                return false;
+        }
+        return true;
+    }
+
+    private void fixLine(Maze maze,int rowInd,int colInd,int fixRow, int fixCol) {
+        int size;
+        if (fixCol==1)
+            size=maze.getRows();
+        else
+            size=maze.getCols();
+        for (int i = 0; i < size; i++) {
+            if (hasOneNeib(maze,rowInd+i*fixCol,colInd+i*fixRow) && rand.nextInt(2)==0)
+                maze.setPositionValue(rowInd+i*fixCol,colInd+i*fixRow,0);
+        }
+    }
+
+    private boolean hasOneNeib(Maze maze,int row, int col) {
+        int count=0;
+        if (maze.PositionInMaze(row+1,col) && maze.getPositionValue(row+1,col)==0)
+            count++;
+            //return true;
+        if (maze.PositionInMaze(row,col+1) && maze.getPositionValue(row,col+1)==0)
+            count++;
+            //return true;
+        if (maze.PositionInMaze(row-1,col) && maze.getPositionValue(row-1,col)==0)
+            count++;
+            //return true;
+        if (maze.PositionInMaze(row,col-1) && maze.getPositionValue(row,col-1)==0)
+            count++;
+            //return true;
+        return count==1;
+    }
+
+
 
     private void DFS(Maze maze, Stack<Cell> stack){
         //null check
@@ -156,12 +206,6 @@ public class MyMazeGenerator extends AMazeGenerator{
         if (maze.IsValidMove(right))
             neibs.add(right);
         Collections.shuffle(neibs,new Random());
-
         return neibs;
-
-
-
-
-
     }
 }

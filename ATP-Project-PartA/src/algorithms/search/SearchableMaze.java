@@ -139,10 +139,4 @@ public class SearchableMaze implements ISearchable{
         return null;
     }
 
-    @Override
-    public void setGoalState(AState state) {
-        if (((MazeState)state).getPositionValue() < goalState.getPositionValue() || goalState.getPositionValue() == -1){
-            goalState = ((MazeState) state);
-        }
-    }
 }
