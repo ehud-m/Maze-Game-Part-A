@@ -13,17 +13,34 @@ import java.util.PriorityQueue;
 public class RunSearchOnMaze {
     public static void main(String[] args) {
 
-        MyMaze3DGenerator mg = new MyMaze3DGenerator();
+        MyMazeGenerator mg = new MyMazeGenerator();
+        try {
+            Maze maze = mg.generate(4,4);
+            maze.print();
+            SearchableMaze searchableMaze = new SearchableMaze(maze);
+            solveProblem(searchableMaze, new BreadthFirstSearch());
+         //   solveProblem(searchableMaze, new BestFirstSearch());
 
-        Maze3D maze = mg.generate(400,400, 400);
-        SearchableMaze3D searchableMaze = new SearchableMaze3D(maze);
+         //   solveProblem(searchableMaze, new DepthFirstSearch());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+/*
+
+        // MyMaze3DGenerator mg = new MyMaze3DGenerator();
+
+       // Maze3D maze = mg.generate(10,10, 10);
+
+    //    SearchableMaze3D searchableMaze = new SearchableMaze3D(maze);
+    solveProblem(searchableMaze, new BreadthFirstSearch());
+        solveProblem(searchableMaze, new BestFirstSearch());
+        solveProblem(searchableMaze, new DepthFirstSearch());
  //       maze.setGoal(new Position(9,9));
   //      maze.setStart(new Position(0,0));
    //     maze.print();
 
-      //  solveProblem(searchableMaze, new BreadthFirstSearch());
-      //  solveProblem(searchableMaze, new BestFirstSearch());
-      //  solveProblem(searchableMaze, new DepthFirstSearch());
+ */
 
     }
     private static void solveProblem(ISearchable domain, ISearchingAlgorithm searcher) {
@@ -35,9 +52,9 @@ public class RunSearchOnMaze {
 //Printing Solution Path
                 System.out.println("Solution path:");
         ArrayList<AState> solutionPath = solution.getSolutionPath();
-        /*for (int i = 0; i < solutionPath.size(); i++) {
+        for (int i = 0; i < solutionPath.size(); i++) {
             System.out.println(String.format("%s. %s",i,solutionPath.get(i)));
-        }*/
+        }
         System.out.println("Solution's length:" + solutionPath.size());
         System.out.println("The algorithm took "+((double)time/1000)+" Seconds"+solutionPath.get(solutionPath.size()-1));
 

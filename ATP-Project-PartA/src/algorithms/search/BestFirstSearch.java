@@ -21,14 +21,14 @@ public class BestFirstSearch extends BreadthFirstSearch {
     protected void enqueue(AState state){
         if (state == null)
             throw new NullPointerException("state is null");
-        if (!s.isVisit(state)){
+        if (isVisit(state)){
             numberOfNodeEvaluated++;
             ((PriorityQueue<AState>) queue).add(state);
-            s.visit(state);
+            visit(state);
             return;
         }
-        else if (s.getCurrentState().getPositionValue()+s.getNeibPrice(state) < state.positionValue){
-            s.visit(state);
+        else if (s.getCurrentState().getPositionValue() < state.positionValue){
+            visit(state);
             numberOfNodeEvaluated++;
             ((PriorityQueue<AState>) queue).remove(state);
             ((PriorityQueue<AState>) queue).add(state);

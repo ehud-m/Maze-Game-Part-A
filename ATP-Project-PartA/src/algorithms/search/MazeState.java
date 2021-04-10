@@ -2,6 +2,8 @@ package algorithms.search;
 
 import algorithms.mazeGenerators.Position;
 
+import java.util.Objects;
+
 public class MazeState extends AState{
 
     private Position p;
@@ -27,6 +29,11 @@ public class MazeState extends AState{
 
     public Position getPosition() {
         return p;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(p);
     }
 
     public boolean equals(Object other) {

@@ -10,7 +10,7 @@ public class BreadthFirstSearch extends ASearchingAlgorithm
     protected ArrayList<AState> Alist;
     protected Object queue;
     protected AState curr;
-    protected ISearchable s;
+
 
 
 
@@ -26,16 +26,16 @@ public class BreadthFirstSearch extends ASearchingAlgorithm
         if (s == null)
             throw new NullPointerException("Searchable is null");
         this.s=s;
-        BFS();
+        goal = BFS();
       //  return null;
-        return (new Solution(getSolution(s)));
+        return (new Solution(getSolution(goal)));
     }
 
     protected void enqueue(AState state) {
         if (state == null)
             throw new NullPointerException("state is null");
-        if (!s.isVisit(state) ){
-            s.visit(state);
+        if (isVisit(state) ){
+            visit(state);
             numberOfNodeEvaluated++;
             ((LinkedList<AState>) queue).add(state);
         }
@@ -44,18 +44,21 @@ public class BreadthFirstSearch extends ASearchingAlgorithm
 
 
 
-    protected void BFS(){
+    protected AState BFS(){
         curr = s.getstart();
         numberOfNodeEvaluated++;
         enqueue(curr);
         while (!isEmpty()){
             curr = dequeue();
             s.changeState(curr);
+            if (isSolved(curr))
+                return curr;
             Alist = s.getAllSuccessors();
             for (AState state: Alist ) {
                 enqueue(state);
             }
         }
+        return null;
     }
 
 

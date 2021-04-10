@@ -1,5 +1,7 @@
 package algorithms.mazeGenerators;
 
+import java.util.Objects;
+
 public class Position {
     private int row;
     private int column;
@@ -8,8 +10,8 @@ public class Position {
 
 
     public Position(int row, int column) {
-        if (row <0 || column < 0)
-            throw new IndexOutOfBoundsException("cannot have negative rows or columns");
+    //    if (row <0 || column < 0) cause problems
+     //       throw new IndexOutOfBoundsException("cannot have negative rows or columns");
         this.row = row;
         this.column = column;
     }
@@ -27,6 +29,11 @@ public class Position {
         if (!(other instanceof Position))
             return false;
         return ((Position)other).row==this.row && ((Position)other).column==this.column;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, column);
     }
 
     public Position getBetween(Position p){

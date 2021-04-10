@@ -9,9 +9,9 @@ public abstract class AState {
     public void setFather(AState other){
         father = other;
     }
-    public void setVisited(boolean visit) {
+ /*   public void setVisited(boolean visit) {
         this.visited = visit;
-    }
+    }*/
     public int getPositionValue() {
         return positionValue;
     }

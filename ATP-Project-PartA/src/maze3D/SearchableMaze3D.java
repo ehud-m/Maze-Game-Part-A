@@ -1,11 +1,8 @@
 package maze3D;
 
-import algorithms.mazeGenerators.Maze;
-import algorithms.mazeGenerators.Position;
 import algorithms.search.AState;
+import algorithms.search.AStateComperator;
 import algorithms.search.ISearchable;
-import algorithms.search.MazeState;
-import algorithms.search.MazeStateComparator;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,7 +14,7 @@ public class SearchableMaze3D implements ISearchable {
     private Maze3DState goalState;
     private Maze3DState currentState;
     private Maze3D maze;
-
+/*
     public void clear() {
         for (int i = 0; i < maze.getDepth(); i++) {
             for (int j = 0; j < maze.getRows(); j++) {
@@ -31,6 +28,8 @@ public class SearchableMaze3D implements ISearchable {
             }
         }
     }
+    /*
+ */
     public SearchableMaze3D(Maze3D maze) {
         if (maze == null)
             throw new NullPointerException("maze is null");
@@ -70,7 +69,7 @@ public class SearchableMaze3D implements ISearchable {
     }
 
     public Comparator<AState> getComperator(){
-        return new MazeStateComparator();
+        return new AStateComperator();
     }
     public ArrayList<AState> getAllSuccessors() {
         ArrayList<AState> states= new ArrayList<AState>();
@@ -99,7 +98,7 @@ public class SearchableMaze3D implements ISearchable {
         return startState;
     }
 
-    @Override
+  /*  @Override
     public boolean isSolved() {
         return currentState.equals(goalState);
     }
@@ -108,8 +107,8 @@ public class SearchableMaze3D implements ISearchable {
         return ((Maze3DState)state).equals(goalState);
     }*/
 
-    @Override
-    public boolean isVisit(AState state) {
+//    @Override
+ /*   public boolean isVisit(AState state) {
         if (state == null)
             throw new NullPointerException("Null state");
         return (visited[((Maze3DState)state).getPosition().getDepthIndex()][((Maze3DState)state).getPosition().getRowIndex()][((Maze3DState)state).getPosition().getColumnIndex()].isVisited());
@@ -117,13 +116,13 @@ public class SearchableMaze3D implements ISearchable {
     public void visit(AState state){
         if (state == null)
             throw new NullPointerException("Null state");
-        visited[((Maze3DState)state).getPosition().getDepthIndex()][((Maze3DState)state).getPosition().getRowIndex()][((Maze3DState)state).getPosition().getColumnIndex()].setVisited(true);
+        visit(visited[((Maze3DState)state).getPosition().getDepthIndex()][((Maze3DState)state).getPosition().getRowIndex()][((Maze3DState)state).getPosition().getColumnIndex()]);
         if (!state.equals(currentState)) {
             state.setFather(currentState);
             ((Maze3DState)state).setPositionValue((currentState.getPositionValue()+getNeibPrice(state)));
         }
     }
-
+*/
     public int getNeibPrice(AState state) {
         if (state == null)
             throw new NullPointerException("Null state");
