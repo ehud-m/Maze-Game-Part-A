@@ -34,7 +34,7 @@ public class BreadthFirstSearch extends ASearchingAlgorithm
     protected void enqueue(AState state) {
         if (state == null)
             throw new NullPointerException("state is null");
-        if (isVisit(state) ){
+        if (!isVisit(state) ){
             visit(state);
             numberOfNodeEvaluated++;
             ((LinkedList<AState>) queue).add(state);
