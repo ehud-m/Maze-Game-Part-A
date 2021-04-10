@@ -1,15 +1,17 @@
 package algorithms.mazeGenerators;
 
 import java.util.LinkedList;
-import java.util.List;
+
 
 public class Cell {
     private Position position;
     private LinkedList<Position> neighbours;
-    private int visited;
+
 
 
     public Cell(Position position, LinkedList<Position> neighbours) {
+        if (position == null || neighbours == null)
+            throw new NullPointerException("position or LinkedList is null");
         this.position = position;
         this.neighbours = neighbours;
     }

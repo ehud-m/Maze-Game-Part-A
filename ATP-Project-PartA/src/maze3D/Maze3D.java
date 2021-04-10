@@ -9,6 +9,8 @@ public class Maze3D {
     private int[][][] map3D;
 
     public Maze3D(int depth,int rows, int cols) {
+        if (depth < 1 || rows < 1 || cols < 1)
+            throw new IllegalArgumentException("cant make 3D maze with this vars");
         this.rows = rows;
         this.cols = cols;
         this.depth = depth;
@@ -16,10 +18,14 @@ public class Maze3D {
     }
 
     public void setStart(Position3D start) {
+        if (start == null)
+            throw new NullPointerException("start pos arg is null");
         this.start = start;
     }
 
     public void setGoal(Position3D goal) {
+        if (goal == null)
+            throw new NullPointerException("Goal pos arg is null");
         this.goal = goal;
     }
 
@@ -68,7 +74,6 @@ public class Maze3D {
                 System.out.println("}");
             }
             if (i != depth-1) {
-                //System.out.println();
                 for (int z = 0; z < cols * 2 + 3; z++)
                     System.out.print("-");
                 System.out.println();
@@ -79,6 +84,8 @@ public class Maze3D {
     }
 
     public void setPositionValue(Position3D pos, int num) {
+        if (pos == null)
+            throw new NullPointerException("pos arg is null");
         map3D[pos.getDepthIndex()][pos.getRowIndex()][pos.getColumnIndex()] = num;
     }
 
@@ -87,6 +94,8 @@ public class Maze3D {
     }
 
     public boolean IsValidMove(Position3D position) {
+        if (position == null)
+            throw new NullPointerException("position arg is null");
         if (PositionInMaze(position)) {
             return (map3D[position.getDepthIndex()][position.getRowIndex()][position.getColumnIndex()] == 1);
         }
@@ -94,6 +103,8 @@ public class Maze3D {
     }
 
     public boolean PositionInMaze(Position3D position) {
+        if (position == null)
+            throw new NullPointerException("position arg is null");
         return (position.getDepthIndex() >=0 && position.getDepthIndex() < depth && position.getColumnIndex() < cols && position.getRowIndex() < rows && position.getRowIndex() >= 0 && position.getColumnIndex() >= 0);
     }
 }

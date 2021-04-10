@@ -8,9 +8,8 @@ public class EmptyMazeGenerator extends AMazeGenerator {
     @Override
     public Maze generate(int row, int col) {
         Maze maze = null;
-        if (row <= 0 && col <= 0 ){
-            System.out.println("Generate Prob");
-            //throw exception
+        if (row < 2 && col < 2 ){
+            throw new IllegalArgumentException(String.format("cannot generate %d %d maze",row,col));
         }
         else{
             maze = new Maze(row,col);

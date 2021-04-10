@@ -4,6 +4,8 @@ public abstract class AState {
     protected AState father;
     protected int positionValue;
     protected boolean visited;
+
+
     public void setFather(AState other){
         father = other;
     }

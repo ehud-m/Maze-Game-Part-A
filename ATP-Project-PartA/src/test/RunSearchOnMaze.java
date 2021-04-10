@@ -15,15 +15,15 @@ public class RunSearchOnMaze {
 
         MyMaze3DGenerator mg = new MyMaze3DGenerator();
 
-        Maze3D maze = mg.generate(300,300, 300);
+        Maze3D maze = mg.generate(400,400, 400);
         SearchableMaze3D searchableMaze = new SearchableMaze3D(maze);
  //       maze.setGoal(new Position(9,9));
   //      maze.setStart(new Position(0,0));
    //     maze.print();
 
-        solveProblem(searchableMaze, new BreadthFirstSearch());
-        solveProblem(searchableMaze, new BestFirstSearch());
-        solveProblem(searchableMaze, new DepthFirstSearch());
+      //  solveProblem(searchableMaze, new BreadthFirstSearch());
+      //  solveProblem(searchableMaze, new BestFirstSearch());
+      //  solveProblem(searchableMaze, new DepthFirstSearch());
 
     }
     private static void solveProblem(ISearchable domain, ISearchingAlgorithm searcher) {

@@ -5,23 +5,17 @@ import java.util.Stack;
 
 public class DepthFirstSearch extends ASearchingAlgorithm {
     @Override
-    /*public Solution solve(ISearchable s) {
-        ArrayList<AState> sol=new ArrayList<AState>();
-        sol.add(s.getstart());
-        DFS (s,sol);
-        return new Solution(sol);
-    }*/
+
 
     public Solution solve(ISearchable s) {
+        if (s == null)
+            throw new NullPointerException("Searchable is null");
         DFSIt(s);
         return new Solution(getSolution(s));
-        /*if (s.isSolved())
-            return new Solution(getSolution(s));
-        else
-            return new Solution(new ArrayList<AState>());*/
     }
 
     private boolean DFSIt(ISearchable s) {
+        //dont need to throw, its cannot be null
         Stack<AState> stack = new Stack<AState>();
         stack.push(s.getstart());
         s.visit(s.getstart());

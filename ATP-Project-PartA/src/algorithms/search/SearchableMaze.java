@@ -6,6 +6,7 @@ import algorithms.mazeGenerators.Position;
 import java.util.ArrayList;
 
 public class SearchableMaze implements ISearchable{
+
     private MazeState[][] visited;
     private MazeState startState;
     private MazeState goalState;
@@ -97,14 +98,20 @@ public class SearchableMaze implements ISearchable{
     }
 
     public boolean isSolved(AState state) {
+        if (state == null)
+            throw new NullPointerException("state is null");
         return ((MazeState)state).equals(goalState);
     }
 
     @Override
     public boolean isVisit(AState state) {
+        if (state == null)
+            throw new NullPointerException("state is null");
         return (visited[((MazeState)state).getPosition().getRowIndex()][((MazeState)state).getPosition().getColumnIndex()].isVisited());
     }
     public void visit(AState state){
+        if (state == null)
+            throw new NullPointerException("state is null");
         visited[((MazeState)state).getPosition().getRowIndex()][((MazeState)state).getPosition().getColumnIndex()].setVisited(true);
         if (!state.equals(currentState)) {
             state.setFather(currentState);
@@ -113,24 +120,27 @@ public class SearchableMaze implements ISearchable{
     }
 
     public int getNeibPrice(AState state) {
+        if (state == null)
+            throw new NullPointerException("state is null");
         Position other = ((MazeState)state).getPosition();
         int rowVal = Math.abs(currentState.getPosition().getRowIndex()-other.getRowIndex());
         int colVal = Math.abs(currentState.getPosition().getColumnIndex()-other.getColumnIndex());
         if (rowVal > 1 || colVal > 1 )
-            return -1;
+            throw new IllegalArgumentException("state is not neighbour of current");
         if ( rowVal + colVal == 1 )
             return 10;
         else if ( rowVal + colVal == 2 )
             return 15;
 
-        return -1;
+        throw new IllegalArgumentException("sended current state");
     }
 
     @Override
     public void changeState(AState state) {
+        if (state == null)
+            throw new NullPointerException("state is null");
         currentState=(MazeState)state;
         Position p = currentState.getPosition();
-   ///     visited[p.getRowIndex()][p.getColumnIndex()].setVisited();
     }
 
     public AState getFather(){

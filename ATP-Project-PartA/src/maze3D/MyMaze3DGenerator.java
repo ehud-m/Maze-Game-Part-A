@@ -17,6 +17,8 @@ public class MyMaze3DGenerator extends AMaze3DGenerator{
         rnd=new Random();
     }
     private Position3D randomEdge(Maze3D maze) {
+        if (maze == null)
+            throw new NullPointerException("maze arg is null");
         int edge = rnd.nextInt(6);
         int depth,row,col;
         if (edge<=1) { //Top or Bottom edge
@@ -47,24 +49,23 @@ public class MyMaze3DGenerator extends AMaze3DGenerator{
     }
     @Override
     public Maze3D generate(int depth,int row, int col) {
+        if (depth < 1 || row < 1 || col < 1)
+            throw new IllegalArgumentException("cant make 3D maze with this vars");
         int stepSize = 2;
-        //if (depth*row*col>1000000)
-        //    stepSize = 3;
         Maze3D maze = new Maze3D(depth,row,col);
         InitBoard(maze,1);
         Position3D start=randomEdge(maze);
         maze.setPositionValue(start,0);
         maze.setStart(start);
-        //Cell3D First = new Cell3D(start,GetMyNeibs(maze.getMap(),start,stepSize));
         Stack<Position3D> stack = new Stack<Position3D>();
         stack.push(start);
         DFS(maze,stack,stepSize);
-        //maze.setGoal(new Position(8,8)); /////#######CHEckkkk
-        //fixFrame(maze);
         setGoal(maze);
         return maze;
     }
     private void setGoal(Maze3D maze) {
+        if (maze == null)
+            throw new NullPointerException("maze arg is null");
         Position3D p;
         do {
             p=randomEdge(maze);
@@ -74,15 +75,16 @@ public class MyMaze3DGenerator extends AMaze3DGenerator{
     }
 
     private void DFS(Maze3D maze, Stack<Position3D> stack,int stepSize){
+        if (maze == null || stack == null)
+            throw new NullPointerException("some arg is null");
         //null check
         int [][][] map = maze.getMap();
+        if (map == null)
+                throw new NullPointerException("maze map is null");
         int posD,posR,posC,curD,curR,curC;
-        //LinkedList<Position3D> neighbour = new LinkedList<Position3D>();
         LinkedList<Integer> neighbour = new LinkedList<Integer>();
         while(!stack.isEmpty()){
             Position3D currentCell = stack.pop();
-            //if (currentCell[1]!=null) {
-            //if (currentCell.HaveNeighbours()){
             curD=currentCell.getDepthIndex();
             curC=currentCell.getColumnIndex();
             curR=currentCell.getRowIndex();

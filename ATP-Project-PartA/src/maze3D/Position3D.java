@@ -8,6 +8,8 @@ public class Position3D {
     private int depth;
 
     public Position3D(int depth,int row, int column) {
+        if (depth < 0 || row < 0 || column < 0)
+            throw new IllegalArgumentException("position cant have negative vars");
         this.depth=depth;
         this.row = row;
         this.column = column;
@@ -22,13 +24,16 @@ public class Position3D {
     }
 
     public boolean equals(Object other) {
+        //null check??
         if (!(other instanceof Position3D))
             return false;
         return ((Position3D)other).depth==this.depth && ((Position3D)other).row==this.row && ((Position3D)other).column==this.column;
     }
 
-    public Position3D getBetween(Position3D p){
+   /* public Position3D getBetween(Position3D p){
+        if (p == null)
+            throw new NullPointerException("position null pointer");
         return new Position3D((p.depth-depth)/2+depth,(p.row-row)/2+row,(p.column-column)/2+column);
     }
-
+*/
 }

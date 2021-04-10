@@ -4,22 +4,23 @@ import java.util.Arrays;
 
 public abstract class AMazeGenerator implements IMazeGenerator{
 
-        public long measureAlgorithmTimeMillis (int row,int col){
+        public long measureAlgorithmTimeMillis (int row,int col) throws Exception {
         long TotalTime = 0;
-        if (row > 0 && col >0 ){
+        if (row > 1 && col > 1 ){
             long time = System.currentTimeMillis();
             generate(row, col);
             TotalTime = System.currentTimeMillis() - time;
         }
         else
-            System.out.println("Number not in range");
-            //throw Exception()
+            throw new IllegalArgumentException("number not in range");
 
         return TotalTime;
 
     }
 
     protected void InitBoard(Maze maze,int number){
+        if (maze == null)
+            throw new NullPointerException("maze null pointer");
         int [][] map = maze.getMap();
         //this for loop fills the array with zeros.
         for (int [] rows : map) {

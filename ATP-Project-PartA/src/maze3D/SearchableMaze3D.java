@@ -32,7 +32,11 @@ public class SearchableMaze3D implements ISearchable {
         }
     }
     public SearchableMaze3D(Maze3D maze) {
+        if (maze == null)
+            throw new NullPointerException("maze is null");
         int[][][] map = maze.getMap();
+        if (map == null)
+            throw new NullPointerException("Mull maze map");
         visited=new Maze3DState[maze.getDepth()][maze.getRows()][maze.getCols()];
         for (int i=0;i<maze.getDepth();i++) {
             for (int j=0;j<maze.getRows();j++) {
@@ -100,15 +104,19 @@ public class SearchableMaze3D implements ISearchable {
         return currentState.equals(goalState);
     }
 
-    public boolean isSolved(AState state) {
+    /*public boolean isSolved(AState state) {
         return ((Maze3DState)state).equals(goalState);
-    }
+    }*/
 
     @Override
     public boolean isVisit(AState state) {
+        if (state == null)
+            throw new NullPointerException("Null state");
         return (visited[((Maze3DState)state).getPosition().getDepthIndex()][((Maze3DState)state).getPosition().getRowIndex()][((Maze3DState)state).getPosition().getColumnIndex()].isVisited());
     }
     public void visit(AState state){
+        if (state == null)
+            throw new NullPointerException("Null state");
         visited[((Maze3DState)state).getPosition().getDepthIndex()][((Maze3DState)state).getPosition().getRowIndex()][((Maze3DState)state).getPosition().getColumnIndex()].setVisited(true);
         if (!state.equals(currentState)) {
             state.setFather(currentState);
@@ -117,11 +125,15 @@ public class SearchableMaze3D implements ISearchable {
     }
 
     public int getNeibPrice(AState state) {
+        if (state == null)
+            throw new NullPointerException("Null state");
         return 10;
     }
 
     @Override
     public void changeState(AState state) {
+        if (state == null)
+            throw new NullPointerException("Null state");
         currentState=(Maze3DState)state;
         Position3D p = currentState.getPosition();
 

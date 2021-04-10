@@ -6,15 +6,17 @@ import algorithms.search.MazeState;
 
 public class Maze3DState extends AState {
     private Position3D p;
-
+/*
     public Maze3DState(Position3D p) {
         this.p = p;
         this.positionValue = 0;
         this.father = null;
         this.visited = false;
     }
-
+*/
     public Maze3DState(Position3D p,int positionValue) {
+        if (p == null)
+            throw new NullPointerException("position arg is null");
         this.p = p;
         this.positionValue = positionValue;
         this.father = null;
@@ -28,6 +30,8 @@ public class Maze3DState extends AState {
         return p;
     }
     public boolean equals(Object other) {
+        if (other == null)
+            throw new NullPointerException("other arg is null");
         if (!(other instanceof Maze3DState))
             return false;
         return ((Maze3DState)other).getPosition().equals(p);
