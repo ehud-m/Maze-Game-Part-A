@@ -1,9 +1,6 @@
 package maze3D;
 
-import algorithms.mazeGenerators.MyMazeGenerator;
-import algorithms.mazeGenerators.Position;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.Stack;
@@ -51,15 +48,32 @@ public class MyMaze3DGenerator extends AMaze3DGenerator{
     public Maze3D generate(int depth,int row, int col) {
         if (depth < 1 || row < 1 || col < 1)
             throw new IllegalArgumentException("cant make 3D maze with this vars");
-        int stepSize = 2;
         Maze3D maze = new Maze3D(depth,row,col);
+        if (depth == 2 && row== 2 && col == 2){
+            int [][][] map = maze.getMap();
+            map [0][0][0] = 1;
+            map [0][0][1] = 0;
+            map [0][1][0] = 0;
+            map [0][1][1] = 0;
+            map [1][0][0] = 1;
+            map [1][0][1] = 0;
+            map [1][1][0] = 1;
+            map [1][1][1] = 1;
+            maze.setGoal(new Position3D(1,0,1));
+            maze.setStart(new Position3D(0,1,1));
+            return maze;
+        }
         InitBoard(maze,1);
-        Position3D start=randomEdge(maze);
+        Position3D start;
+        do {
+            start = randomEdge(maze);
+        }
+        while ((GetMyNeibs(maze.getMap(),new LinkedList<Integer>(), start) == null));
         maze.setPositionValue(start,0);
         maze.setStart(start);
         Stack<Position3D> stack = new Stack<Position3D>();
         stack.push(start);
-        DFS(maze,stack,stepSize);
+        DFS(maze,stack);
         setGoal(maze);
         return maze;
     }
@@ -67,14 +81,19 @@ public class MyMaze3DGenerator extends AMaze3DGenerator{
         if (maze == null)
             throw new NullPointerException("maze arg is null");
         Position3D p;
+        int okGoal = (maze.getDepth()+maze.getCols()+maze.getRows())/6;
+        int minPos;
         do {
             p=randomEdge(maze);
+            minPos = (Math.abs(maze.getStartPosition().getDepthIndex()-p.getDepthIndex())
+                    +Math.abs(maze.getStartPosition().getColumnIndex()-p.getColumnIndex()) +
+                    Math.abs(maze.getStartPosition().getRowIndex()-p.getRowIndex()));
         }
-        while (maze.getPositionValue(p)!=0 || p.equals(maze.getStartPosition()));
+        while (maze.getPositionValue(p)!=0 || p.equals(maze.getStartPosition())||  minPos < okGoal );
         maze.setGoal(p);
     }
 
-    private void DFS(Maze3D maze, Stack<Position3D> stack,int stepSize){
+    private void DFS(Maze3D maze, Stack<Position3D> stack){
         if (maze == null || stack == null)
             throw new NullPointerException("some arg is null");
         //null check
@@ -88,7 +107,7 @@ public class MyMaze3DGenerator extends AMaze3DGenerator{
             curD=currentCell.getDepthIndex();
             curC=currentCell.getColumnIndex();
             curR=currentCell.getRowIndex();
-            Position3D neib = GetMyNeibs(map,neighbour,currentCell,stepSize);
+            Position3D neib = GetMyNeibs(map,neighbour,currentCell);
             if (neib==null)
                 continue;
             stack.push(currentCell);
@@ -96,18 +115,12 @@ public class MyMaze3DGenerator extends AMaze3DGenerator{
             posR=neib.getRowIndex();
             posC=neib.getColumnIndex();
             map[posD][posR][posC] = 0;
-            if (stepSize==3) {
-                map[(posD - curD) / 3 * 2 + curD][(posR - curR) / 3 * 2 + curR][(posC - curC) / 3 * 2 + curC] = 0;
-                map[(posD - curD) / 3 + curD][(posR - curR) / 3 + curR][(posC - curC) / 3 + curC] = 0;
-            }
-            else
-                map[(posD-curD)/2+curD][(posR-curR)/2+curR][(posC-curC)/2+curC]=0;
+            map[(posD-curD)/2+curD][(posR-curR)/2+curR][(posC-curC)/2+curC]=0;
             stack.push(neib);
-            //}
         }
     }
 
-    private Position3D GetMyNeibs(int[][][] map ,LinkedList<Integer> neibs, Position3D position,int stepSize){
+    private Position3D GetMyNeibs(int[][][] map ,LinkedList<Integer> neibs, Position3D position){
         if (position == null)
             return null;
         int posD,posR,posC;
@@ -115,34 +128,34 @@ public class MyMaze3DGenerator extends AMaze3DGenerator{
         posR=position.getRowIndex();
         posC=position.getColumnIndex();
         neibs.clear();
-        if (posD+stepSize<map.length && map[posD+stepSize][posR][posC]==1)
+        if (posD+2<map.length && map[posD+2][posR][posC]==1)
             neibs.add(1);
-        if (posD-stepSize>=0 && map[posD-stepSize][posR][posC]==1)
+        if (posD-2>=0 && map[posD-2][posR][posC]==1)
             neibs.add(2);
-        if (posR+stepSize<map[0].length  && map[posD][posR+stepSize][posC]==1)
+        if (posR+2<map[0].length  && map[posD][posR+2][posC]==1)
             neibs.add(3);
-        if ( posR-stepSize>=0 && map[posD][posR-stepSize][posC]==1)
+        if ( posR-2>=0 && map[posD][posR-2][posC]==1)
             neibs.add(4);
-        if ( posC+stepSize <map[0][0].length && map[posD][posR][posC+stepSize]==1)
+        if ( posC+2 <map[0][0].length && map[posD][posR][posC+2]==1)
             neibs.add(5); 
-        if (posC-stepSize >=0 && map[posD][posR][posC-stepSize]==1)
+        if (posC-2 >=0 && map[posD][posR][posC-2]==1)
             neibs.add(6);
         if (neibs.size()==0)
             return null;
         int choice = neibs.get(rnd.nextInt(neibs.size()));
         switch (choice) {
             case 1:
-                return (new Position3D(posD+stepSize,posR,posC));
+                return (new Position3D(posD+2,posR,posC));
             case 2:
-                return (new Position3D(posD-stepSize,posR,posC));
+                return (new Position3D(posD-2,posR,posC));
             case 3:
-                return (new Position3D(posD,posR+stepSize,posC));
+                return (new Position3D(posD,posR+2,posC));
             case 4:
-                return (new Position3D(posD,posR-stepSize,posC));
+                return (new Position3D(posD,posR-2,posC));
             case 5:
-                return (new Position3D(posD,posR,posC+stepSize));
+                return (new Position3D(posD,posR,posC+2));
             default:
-                return (new Position3D(posD,posR,posC-stepSize));
+                return (new Position3D(posD,posR,posC-2));
         }
     }
 }

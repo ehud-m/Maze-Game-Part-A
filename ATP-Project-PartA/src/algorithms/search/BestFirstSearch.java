@@ -1,12 +1,15 @@
 package algorithms.search;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.PriorityQueue;
 
 public class BestFirstSearch extends BreadthFirstSearch {
 
+    private HashMap <AState,Integer> valueOfPos;
 
     public BestFirstSearch() {
+        valueOfPos = new HashMap<>();
         Alist = new ArrayList<>();
     }
 
@@ -21,23 +24,37 @@ public class BestFirstSearch extends BreadthFirstSearch {
     protected void enqueue(AState state){
         if (state == null)
             throw new NullPointerException("state is null");
-        if (!s.isVisit(state)){
+        if (!isVisit(state)){
             numberOfNodeEvaluated++;
-            ((PriorityQueue<AState>) queue).add(state);
-            s.visit(state);
-            return;
+            if (!valueOfPos.containsKey(state)) {
+                ((PriorityQueue<AState>) queue).add(state);
+                valueOfPos.put(state,state.getPositionValue());
+            }
+            else{
+                int oldState = valueOfPos.get(state);
+                if (state.getPositionValue() < oldState){
+                    ((PriorityQueue<AState>) queue).remove(state);
+                    ((PriorityQueue<AState>) queue).add(state);
+                    valueOfPos.put(state,state.getPositionValue());
+                }
+
+            }
+
+            //visit(state);
+            //return;
         }
-        else if (s.getCurrentState().getPositionValue()+s.getNeibPrice(state) < state.positionValue){
-            s.visit(state);
+ /*       else if (s.getCurrentState().getPositionValue() < state.positionValue){
+            visit(state);
             numberOfNodeEvaluated++;
             ((PriorityQueue<AState>) queue).remove(state);
             ((PriorityQueue<AState>) queue).add(state);
-        }
+        }*/
     }
 
     protected AState dequeue(){
-        return ((PriorityQueue<AState>)queue).poll();
-
+        AState state = ((PriorityQueue<AState>)queue).poll();
+        visit(state);
+        return state;
     }
 
 

@@ -1,7 +1,5 @@
 package maze3D;
 
-import algorithms.mazeGenerators.Maze;
-
 import java.util.Arrays;
 
 public abstract class AMaze3DGenerator implements IMazeGenerator3D {

@@ -2,14 +2,16 @@ package maze3D;
 
 import algorithms.mazeGenerators.Position;
 
+import java.util.Objects;
+
 public class Position3D {
     private int row;
     private int column;
     private int depth;
 
     public Position3D(int depth,int row, int column) {
-        if (depth < 0 || row < 0 || column < 0)
-            throw new IllegalArgumentException("position cant have negative vars");
+     /*   if (depth < 0 || row < 0 || column < 0)
+            throw new IllegalArgumentException("position cant have negative vars");*/
         this.depth=depth;
         this.row = row;
         this.column = column;
@@ -30,10 +32,9 @@ public class Position3D {
         return ((Position3D)other).depth==this.depth && ((Position3D)other).row==this.row && ((Position3D)other).column==this.column;
     }
 
-   /* public Position3D getBetween(Position3D p){
-        if (p == null)
-            throw new NullPointerException("position null pointer");
-        return new Position3D((p.depth-depth)/2+depth,(p.row-row)/2+row,(p.column-column)/2+column);
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, column, depth);
     }
-*/
+
 }

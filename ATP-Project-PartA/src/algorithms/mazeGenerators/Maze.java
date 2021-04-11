@@ -1,5 +1,8 @@
 package algorithms.mazeGenerators;
 
+/**
+ * This class represents a maze.
+ */
 public class Maze {
     private Position start;
     private Position goal;
@@ -7,6 +10,11 @@ public class Maze {
     private int cols;
     private int[][] map;
 
+    /**
+     * creates a new rowsXcols maze object
+     * @param rows the number of maze's rows
+     * @param cols the number of maze's cols
+     */
     public Maze(int rows, int cols) {
         if (rows < 2 && cols < 2 ){
             throw new IllegalArgumentException(String.format("cannot generate %d %d maze",rows,cols));
@@ -16,6 +24,10 @@ public class Maze {
         map = new int[rows][cols];
     }
 
+    /**
+     * Sets the mazes start position
+     * @param start The maze's start position
+     */
     public void setStart(Position start) {
         if (start == null)
             throw new NullPointerException("start Position is null");
@@ -24,6 +36,10 @@ public class Maze {
         this.start = start;
     }
 
+    /**
+     * Sets the mazes goal position
+     * @param goal The mazes goal position
+     */
     public void setGoal(Position goal) {
         if (goal == null)
             throw new NullPointerException("Goal Position is null");
@@ -32,29 +48,52 @@ public class Maze {
         this.goal = goal;
     }
 
+    /**
+     * Returns the mazes start position
+     * @return the mazes start position
+     */
     public Position getStartPosition() {
         return start;
     }
 
+    /**
+     * Returns the mazes goal position
+     * @return the mazes goal position
+     */
     public Position getGoalPosition() {
         return goal;
     }
 
-
-
+    /**
+     * Returns the number of rows in the maze
+     * @return the number of rows in the maze
+     */
     public int getRows() {
         return rows;
     }
 
+    /**
+     * Returns the number of cols in the maze
+     * @return the number of cols in the maze
+     */
     public int getCols() {
         return cols;
     }
 
-
+    /**
+     * Returns the map of the maze, 1-for a wall and 0-for a passage
+     * @return A 2D array which represents the maze.
+     */
     public int[][] getMap() {
         return map;
     }
 
+    /**
+     * Returns a char which represents a specific maze cell
+     * @param row The index of the cells row
+     * @param col The index of the cells col
+     * @return S-Start Position, E-End Position, 1-wall, 0-passage
+     */
     private String getCellString(int row, int col) {
         if (start.getRowIndex()==row && start.getColumnIndex()==col)
             return "S";
@@ -64,6 +103,9 @@ public class Maze {
             return map[row][col]+"";
     }
 
+    /**
+     * Prints the maze
+     */
     public void print() {
         for (int i=0;i<map.length;i++) {
             System.out.print("{ ");
@@ -75,6 +117,11 @@ public class Maze {
         }
     }
 
+    /**
+     * Sets a maze's position to a specific value
+     * @param pos The position to change its value
+     * @param num The new value. 1-wall, 0-passage
+     */
     public void setPositionValue(Position pos, int num) {
         if (pos == null)
             throw new NullPointerException("Position is null");
@@ -83,6 +130,11 @@ public class Maze {
         map[pos.getRowIndex()][pos.getColumnIndex()] = num;
     }
 
+    /**
+     * returns a maze's position value
+     * @param pos The position to return its value
+     * @return The positions value. 1-wall, 0-passage
+     */
     public int getPositionValue(Position pos) {
         if (pos == null)
             throw new NullPointerException("Position is null");
@@ -91,18 +143,35 @@ public class Maze {
         return map[pos.getRowIndex()][pos.getColumnIndex()];
     }
 
+    /**
+     * Sets a maze's position to a specific value
+     * @param row The row index of the position
+     * @param col The col index of the position
+     * @param num The new value. 1-wall, 0-passage
+     */
     public void setPositionValue(int row, int col, int num) {
         if (!PositionInMaze(row,col))
             throw new IndexOutOfBoundsException("position out of maze");
         map[row][col] = num;
     }
 
+    /**
+     * returns a maze's position value
+     * @param row the row index of the position
+     * @param col the col index of the position
+     * @return The positions value. 1-wall, 0-passage
+     */
     public int getPositionValue(int row, int col) {
         if (!PositionInMaze(row,col))
             throw new IndexOutOfBoundsException("position out of maze");
         return map[row][col];
     }
 
+    /**
+     * Checks if the position is movable for the generation algorithm - inside the maze and it's a wall
+     * @param position The position to check
+     * @return True if the position is movable, otherwise - false
+     */
     public boolean IsValidMove(Position position) {
         if (PositionInMaze(position)) {
             return (map[position.getRowIndex()][position.getColumnIndex()] == 1);
@@ -110,12 +179,23 @@ public class Maze {
         return false;
     }
 
+    /**
+     * checks if the position is inside the maze
+     * @param position the position to check
+     * @return true if the position is inside the maze, otherwise - false
+     */
     public boolean PositionInMaze(Position position) {
         if (position == null)
             throw new NullPointerException("Null Position");
         return (position.getColumnIndex() < cols && position.getRowIndex() < rows && position.getRowIndex() >= 0 && position.getColumnIndex() >= 0);
     }
 
+    /**
+     * checks if the position is inside the maze
+     * @param row the row index of the position to check
+     * @param col the col index of the position to check
+     * @return true if the position is inside the maze, otherwise - false
+     */
     public boolean PositionInMaze(int row, int col) {
         return (col < cols && row < rows && row >= 0 && col >= 0);
     }
