@@ -60,7 +60,7 @@ public class MyMazeGenerator extends AMazeGenerator{
     }
 
     @Override
-    public Maze generate(int row, int col) throws Exception {
+    public Maze generate(int row, int col) {
         if (row < 2 || col < 2)
             throw new IllegalArgumentException("Invalid Size of Maze!");
         Maze maze = new Maze(row,col);

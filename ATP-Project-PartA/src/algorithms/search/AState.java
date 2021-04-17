@@ -1,5 +1,7 @@
 package algorithms.search;
-
+/**
+ * represent a general picture of specific move in a searchable problem
+ */
 public abstract class AState {
 
     protected AState father;

@@ -11,7 +11,7 @@ public interface IMazeGenerator {
      * @param col The number of cols in the maze
      * @return The new Maze generated
      */
-    Maze generate(int row,int col) throws Exception;
+    Maze generate(int row,int col);
     /**
      * measures the time it takes to generate a rowXcol maze
      * @param row the number of maze rows

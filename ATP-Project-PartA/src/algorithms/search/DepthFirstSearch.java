@@ -2,11 +2,20 @@ package algorithms.search;
 
 import java.util.ArrayList;
 import java.util.Stack;
-
+/**
+ * this class implements a Depth First Search algorithm by
+ * using stack for any searchable problem
+ *
+ * Depth first search finding a path to the goal state
+ */
 public class DepthFirstSearch extends ASearchingAlgorithm {
     @Override
 
-
+    /**
+     * returns a solution path
+     * @param s A searchable problem
+     * @return path of the first solution path was found
+     */
     public Solution solve(ISearchable s) {
         if (s == null)
             throw new NullPointerException("Searchable is null");
@@ -15,6 +24,11 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
         return new Solution(getSolution(goal));
     }
 
+    /**
+     * return's the AState that the algorithm is searching
+     * implements DFS.
+     * @return AState that the algorithm is searching
+     */
     private AState DFSIt() {
         //dont need to throw, its cannot be null
         Stack<AState> stack = new Stack<AState>();
@@ -29,7 +43,7 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
             if (isSolved(current))
                 return current;
             numberOfNodeEvaluated++;
-            ArrayList<AState> moves=s.getAllSuccessors();
+            ArrayList<AState> moves=s.getAllSuccessors(current);
             for (AState neib:moves) {
                 if(!isVisit(neib)) {
                     stack.push(neib);
@@ -39,12 +53,19 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
         }
         return null;
     }
-
+    /**
+     * return the name of the searching algorithm
+     * @return the name of the searching algorithm
+     */
     @Override
     public String getName() {
         return "Depth First Search";
     }
 
+    /**
+     * return's the number of nodes that visited by the algorithm
+     * @return integer represents this number
+     */
     @Override
     public long getNumberOfNodesEvaluated() {
         return numberOfNodeEvaluated;

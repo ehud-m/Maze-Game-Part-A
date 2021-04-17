@@ -15,7 +15,6 @@ public class Maze3DState extends AState {
         this.p = p;
         this.positionValue = positionValue;
         this.father = null;
-        this.visited = false;
     }
 
     public Position3D getPosition() {

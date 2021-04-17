@@ -15,7 +15,7 @@ public abstract class AMazeGenerator implements IMazeGenerator{
      * @return the time it took to genereate in milliseconds
      * @throws Exception in case of illegel size of maze
      */
-        public long measureAlgorithmTimeMillis (int row,int col) throws Exception {
+        public long measureAlgorithmTimeMillis (int row,int col) {
         long TotalTime = 0;
         if (row > 1 && col > 1 ){
             long time = System.currentTimeMillis();
