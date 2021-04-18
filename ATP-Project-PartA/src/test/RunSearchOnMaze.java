@@ -29,7 +29,7 @@ public class RunSearchOnMaze {
         }
 
 */
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 1; i++) {
             MyMaze3DGenerator mg = new MyMaze3DGenerator();
             Maze3D maze = mg.generate(10,10, 10);
             SearchableMaze3D searchableMaze = new SearchableMaze3D(maze);
