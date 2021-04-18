@@ -34,7 +34,6 @@ public class BreadthFirstSearch extends ASearchingAlgorithm
             throw new NullPointerException("Searchable is null");
         this.s=s;
         goal = BFS();
-      //  return null;
         return (new Solution(getSolution(goal)));
     }
 

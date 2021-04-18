@@ -29,18 +29,19 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
      * @return AState that the algorithm is searching
      */
     private AState DFSIt() {
-        //dont need to throw, its cannot be null
+        //A stack which is used for the DFS algorithm
         Stack<AState> stack = new Stack<AState>();
         stack.push(s.getstart());
-        visit(s.getstart());
         while ( !stack.isEmpty()) {
             AState current=stack.pop();
-            if (isVisit(current) && !s.getstart().equals(current))
+            //if this state was already visited - continue to the next state
+            if (isVisit(current))
                 continue;
             visit(current);
             if (isSolved(current))
                 return current;
             numberOfNodeEvaluated++;
+            //for every successor - if it wasn't visited yet - add it to the stack
             ArrayList<AState> moves=s.getAllSuccessors(current);
             for (AState neib:moves) {
                 if(!isVisit(neib)) {

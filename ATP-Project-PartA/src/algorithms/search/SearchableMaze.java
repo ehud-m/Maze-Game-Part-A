@@ -43,7 +43,9 @@ public class SearchableMaze implements ISearchable{
         MazeState currentState=(MazeState)curr;
         Position curPos=currentState.getPosition();
         Position move=new Position(curPos.getRowIndex()+rowInc,curPos.getColumnIndex()+colInc);
+        //if the successor is movable, add it to the list of successors
         if (checkPositionMovable(move)) {
+            //set the neighbours value according to the current state value
             MazeState state = new MazeState(move,currentState.getPositionValue()+10);
             state.setFather(currentState);
             lst.add(state);
@@ -62,6 +64,7 @@ public class SearchableMaze implements ISearchable{
         Position diag=new Position(curPos.getRowIndex()+rowInc,curPos.getColumnIndex()+colInc);
         Position vert=new Position(curPos.getRowIndex()+rowInc,curPos.getColumnIndex());
         Position horiz=new Position(curPos.getRowIndex(),curPos.getColumnIndex()+colInc);
+        //the diagonal position is movable only if theres a straight path to it from the current position
         if (checkPositionMovable(diag) && (checkPositionMovable(vert) || checkPositionMovable(horiz))) {
             MazeState state = new MazeState(diag,currentState.getPositionValue()+15);
             state.setFather(currentState);
@@ -76,6 +79,7 @@ public class SearchableMaze implements ISearchable{
      */
     public ArrayList<AState> getAllSuccessors(AState curr) {
         ArrayList<AState> states= new ArrayList<AState>();
+        //check for all the possible 8 neighbours if they are movable from the current state
         addStraightState(-1,0,states,curr);
         addDiagonalState(-1,1,states,curr);
         addStraightState(0,1,states,curr);
