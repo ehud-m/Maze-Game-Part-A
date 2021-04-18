@@ -31,7 +31,7 @@ public abstract class AMaze3DGenerator implements IMazeGenerator3D {
         if (maze3D == null)
             throw new NullPointerException("maze arg is null");
         int [][][] map3D = maze3D.getMap();
-        //this for loop fills the array with zeros.
+        //this for loop fills the array with the given number.
         for (int [][] map : map3D) {
             for(int [] rows: map)
                 Arrays.fill(rows, number);

@@ -17,7 +17,6 @@ public class BestFirstSearch extends BreadthFirstSearch {
      * Constructor
      */
     public BestFirstSearch() {
-        //For each state which was inserted to the queue - holds it's value
         valueOfPos = new HashMap<>();
         Alist = new ArrayList<>();
         queue = new PriorityQueue<AState>();
@@ -44,20 +43,15 @@ public class BestFirstSearch extends BreadthFirstSearch {
     protected void enqueue(AState state){
         if (state == null)
             throw new NullPointerException("state is null");
-        //Only if the state wasn't visited(wasn't removed from the queue) - do the action
-        //If it was visited - the cheapest path to this state is already found
         if (!isVisit(state)){
             numberOfNodeEvaluated++;
-            //The state isn't yet inside the priority queue -add it to the queue
             if (!valueOfPos.containsKey(state)) {
                 ((PriorityQueue<AState>) queue).add(state);
                 valueOfPos.put(state,state.getPositionValue());
             }
-            //The state is already in the priority queue - check if it could be improved
             else{
                 int oldState = valueOfPos.get(state);
                 if (state.getPositionValue() < oldState){
-                    //add the state with's it's new value and path to the queue
                     ((PriorityQueue<AState>) queue).remove(state);
                     ((PriorityQueue<AState>) queue).add(state);
                     valueOfPos.put(state,state.getPositionValue());
@@ -73,7 +67,6 @@ public class BestFirstSearch extends BreadthFirstSearch {
      */
     protected AState dequeue(){
         AState state = ((PriorityQueue<AState>)queue).poll();
-        //when a state is removed from the queue - it's visited
         visit(state);
         return state;
     }

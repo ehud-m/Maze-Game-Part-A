@@ -101,26 +101,31 @@ public class Maze3D {
     /**
      * Prints the maze
      */
-    public void print() {
+    public void print(){
         System.out.println("{");
-        for (int i=0;i<depth;i++) {
-            int j;
-            for (j=0;j<rows;j++) {
-                int k;
+        for(int depth = 0; depth < map.length; depth++){
+            for(int row = 0; row < map[0].length; row++) {
                 System.out.print("{ ");
-                for(k=0;k<cols;k++){
-                    System.out.print(getCellString(i,j,k)+" ");
+                for (int col = 0; col < map[0][0].length; col++) {
+                    if (depth == startPosition.getDepthIndex() && row == startPosition.getRowIndex() && col == startPosition.getColumnIndex()) // if the position is the start - mark with S
+                        System.out.print("S ");
+                    else {
+                        if (depth == goalPosition.getDepthIndex() && row == goalPosition.getRowIndex() && col == goalPosition.getColumnIndex()) // if the position is the goal - mark with E
+                            System.out.print("E ");
+                        else
+                            System.out.print(map[depth][row][col] + " ");
+                    }
                 }
                 System.out.println("}");
             }
-            if (i != depth-1) {
-                for (int z = 0; z < cols * 2 + 3; z++)
-                    System.out.print("-");
+            if(depth < map.length - 1) {
+                System.out.print("---");
+                for (int i = 0; i < map[0][0].length; i++)
+                    System.out.print("--");
                 System.out.println();
             }
         }
         System.out.println("}");
-
     }
     /**
      * Sets a maze's position to a specific value
@@ -140,19 +145,8 @@ public class Maze3D {
     public int getPositionValue(Position3D pos) {
         return map3D[pos.getDepthIndex()][pos.getRowIndex()][pos.getColumnIndex()];
     }
-    /**
-     * Checks if the position is movable for the generation algorithm - inside the maze and it's a wall
-     * @param position The position to check
-     * @return True if the position is movable, otherwise - false
-     */
-    public boolean IsValidMove(Position3D position) {
-        if (position == null)
-            throw new NullPointerException("position arg is null");
-        if (PositionInMaze(position)) {
-            return (map3D[position.getDepthIndex()][position.getRowIndex()][position.getColumnIndex()] == 1);
-        }
-        return false;
-    }
+
+
     /**
      * checks if the position is inside the maze
      * @param position the position to check

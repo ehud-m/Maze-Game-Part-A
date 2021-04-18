@@ -32,6 +32,7 @@ public abstract class ASearchingAlgorithm implements ISearchingAlgorithm {
     protected void visit(AState state){
         if (state == null)
             throw new NullPointerException("state is null");
+
         visited.add(state);
     }
     /**
@@ -63,14 +64,12 @@ public abstract class ASearchingAlgorithm implements ISearchingAlgorithm {
      * @return an ArrayList of states with the solution path
      */
     protected ArrayList<AState> getSolution(AState goal){
-        //if the maze is unsolvable, the algorithms won't find a goal state, or will find a goal state without a father
         if (goal == null)
             throw new NullPointerException("Maze Without Solution");
         ArrayList<AState> lst = new ArrayList<AState>();
         lst.add(goal);
         if (goal.getFather() == null)
             throw new IllegalArgumentException("Maze Without Solution");
-        //until the start position is reached, add all the states on the path there to the solution array
         while (goal.getFather() != null){
             lst.add(goal.getFather());
             goal=goal.getFather();
