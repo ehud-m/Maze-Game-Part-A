@@ -5,7 +5,7 @@ import java.util.Arrays;
  * This class represents an abstract 3DmazeGenerator, which implements the interface
  * IMazeGenerator. All the 3D maze Generators should extend this class.
  */
-public abstract class AMaze3DGenerator implements IMazeGenerator3D {
+public abstract class AMaze3DGenerator implements IMaze3DGenerator {
     /**
      * measures the time it takes to generate a rowXcol maze
      * @param depth the number of maze depth

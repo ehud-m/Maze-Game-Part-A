@@ -103,24 +103,24 @@ public class Maze3D {
      */
     public void print(){
         System.out.println("{");
-        for(int depth = 0; depth < map.length; depth++){
-            for(int row = 0; row < map[0].length; row++) {
+        for(int depth = 0; depth < map3D.length; depth++){
+            for(int row = 0; row < map3D[0].length; row++) {
                 System.out.print("{ ");
-                for (int col = 0; col < map[0][0].length; col++) {
-                    if (depth == startPosition.getDepthIndex() && row == startPosition.getRowIndex() && col == startPosition.getColumnIndex()) // if the position is the start - mark with S
+                for (int col = 0; col < map3D[0][0].length; col++) {
+                    if (depth == start.getDepthIndex() && row == start.getRowIndex() && col == start.getColumnIndex()) // if the position is the start - mark with S
                         System.out.print("S ");
                     else {
-                        if (depth == goalPosition.getDepthIndex() && row == goalPosition.getRowIndex() && col == goalPosition.getColumnIndex()) // if the position is the goal - mark with E
+                        if (depth == goal.getDepthIndex() && row == goal.getRowIndex() && col == goal.getColumnIndex()) // if the position is the goal - mark with E
                             System.out.print("E ");
                         else
-                            System.out.print(map[depth][row][col] + " ");
+                            System.out.print(map3D[depth][row][col] + " ");
                     }
                 }
                 System.out.println("}");
             }
-            if(depth < map.length - 1) {
+            if(depth < map3D.length - 1) {
                 System.out.print("---");
-                for (int i = 0; i < map[0][0].length; i++)
+                for (int i = 0; i < map3D[0][0].length; i++)
                     System.out.print("--");
                 System.out.println();
             }
