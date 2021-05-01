@@ -9,7 +9,30 @@ public class Maze {
     private int rows;
     private int cols;
     private int[][] map;
+ /*
+    rows - 2 bytes
+    cols -2 bytes
+    start rows -2 bytes
+    start cols - 2 bytes
+    goal rows - 2 bytes
+    goal cols - 2 bytes
+    map starts with index 12
+    starts with 1
+    */
 
+    public Maze(byte [] bMaze){
+        if (bMaze == null)
+            throw new NullPointerException("Byte array is null");
+        this.rows = (int)bMaze[1]+((int)bMaze[0])*256;
+        this.cols = (int)bMaze[3]+((int) bMaze[2])*256;
+        this.start = new Position(((int)bMaze[4]*256+(int)bMaze[5]),(int)bMaze[6]*256+(int)bMaze[7]);
+        this.goal = new Position((int)bMaze[8]*256+(int)bMaze[9],(int)bMaze[10]*256+(int)bMaze[11]);
+        for (int i = 0; i < rows ; i++) {
+            for (int j = 0; j < cols; j++) {
+                map[i][j] = bMaze[12+j+i*cols]; // cast to int if there is a problem
+            }
+        }
+    }
     /**
      * creates a new rowsXcols maze object
      * @param rows the number of maze's rows
@@ -22,6 +45,28 @@ public class Maze {
         this.rows = rows;
         this.cols = cols;
         map = new int[rows][cols];
+    }
+
+    public byte[] toByteArray(){
+        byte[] bMaze = new byte[12+rows*cols];
+        bMaze[0] = (byte) (rows/256);
+        bMaze[1] = (byte) (rows%256);
+        bMaze[2] = (byte) (cols/256);
+        bMaze[3] = (byte) (cols%256);
+        bMaze[4] = (byte) (start.getRowIndex()/256);
+        bMaze[5] = (byte) (start.getRowIndex()%256);
+        bMaze[6] = (byte) (start.getColumnIndex()/256);
+        bMaze[7] = (byte) (start.getColumnIndex()%256);
+        bMaze[8] = (byte) (goal.getRowIndex()/256);
+        bMaze[9] = (byte) (goal.getRowIndex()%256);
+        bMaze[10] = (byte) (goal.getColumnIndex()/256);
+        bMaze[11] = (byte) (goal.getColumnIndex()%256);
+        for (int i = 0; i < rows ; i++) {
+            for (int j = 0; j < cols; j++) {
+                bMaze[12+j+i*cols] = (byte) map[i][j];
+            }
+        }
+        return bMaze;
     }
 
     /**
