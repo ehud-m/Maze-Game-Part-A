@@ -27,10 +27,10 @@ public class Maze implements Serializable {
     public Maze(byte [] bMaze){
         if (bMaze == null)
             throw new NullPointerException("Byte array is null");
-        this.rows = (int)bMaze[1]+((int)bMaze[0])*256;
-        this.cols = (int)bMaze[3]+((int) bMaze[2])*256;
-        this.start = new Position(((int)bMaze[4]*256+(int)bMaze[5]),(int)bMaze[6]*256+(int)bMaze[7]);
-        this.goal = new Position((int)bMaze[8]*256+(int)bMaze[9],(int)bMaze[10]*256+(int)bMaze[11]);
+        this.rows = ((bMaze[1])&0xFF)+(bMaze[0]&0xFF)*256;
+        this.cols = (bMaze[3]&0xFF)+(bMaze[2]&0xFF)*256;
+        this.start = new Position((bMaze[4]&0xFF)*256+(bMaze[5]&0xFF),(bMaze[6]&0xFF)*256+(bMaze[7]&0xFF));
+        this.goal = new Position((bMaze[8]&0xFF)*256+(bMaze[9]&0xFF),(bMaze[10]&0xFF)*256+(bMaze[11]&0xFF));
         map=new int[rows][cols];
         for (int i = 0; i < rows ; i++) {
             for (int j = 0; j < cols; j++) {
