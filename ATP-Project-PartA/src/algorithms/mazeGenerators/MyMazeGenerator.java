@@ -7,6 +7,9 @@ public class MyMazeGenerator extends AMazeGenerator{
     private Random rand;
     //saves for each position in the maze the number of steps from it to the start position
     private int [][] discoveryTime;
+    //The row and col index of the position in the frame which has the maximum discovery time
+    private int maxDiscI;
+    private int maxDiscJ;
 
     public MyMazeGenerator() {
         rand=new Random();
@@ -65,6 +68,8 @@ public class MyMazeGenerator extends AMazeGenerator{
             throw new IllegalArgumentException("Invalid Size of Maze!");
         Maze maze = new Maze(row,col);
         discoveryTime = new int[maze.getRows()][maze.getCols()];
+        int maxDiscI=0;
+        int maxDiscJ=0;
         InitBoard(maze,1);
         Position start;
         //generate a 2X2 maze
@@ -83,6 +88,8 @@ public class MyMazeGenerator extends AMazeGenerator{
         //The stack which is used for the DFS algorithm
         Stack<Cell> stack = new Stack<Cell>();
         stack.push(First);
+        maxDiscJ=start.getColumnIndex();
+        maxDiscI= start.getRowIndex();
         DFS(maze,stack);
         fixFrame(maze);
         setGoal(maze);
@@ -95,13 +102,8 @@ public class MyMazeGenerator extends AMazeGenerator{
      */
 
     private void setGoal(Maze maze) {
-        Position p;
-        do {
-            p=randomEdge(maze);
-        }
-        //The goal position must be in the edge of the maze, must be a passage, and be far enough from the start
-        while (maze.getPositionValue(p)!=0 || p.equals(maze.getStartPosition()) || discoveryTime[p.getRowIndex()][p.getColumnIndex()] <= ((maze.getRows() + maze.getCols())/2));
-        maze.setGoal(p);
+        maze.setGoal(new Position(maxDiscI,maxDiscJ));
+
     }
 
     /**
@@ -169,29 +171,47 @@ public class MyMazeGenerator extends AMazeGenerator{
         //same for the column index
         for (int i = 0; i < size; i++) {
             //if a position has exactly one neighbour, choose randomly if to break it
-            if (hasOneNeib(maze,rowInd+i*fixCol,colInd+i*fixRow) && rand.nextInt(2)==0)
-                maze.setPositionValue(rowInd+i*fixCol,colInd+i*fixRow,0);
+            Position neib=hasOneNeib(maze,rowInd+i*fixCol,colInd+i*fixRow);
+            if (neib!=null && rand.nextInt(2)==0) {
+                maze.setPositionValue(rowInd + i * fixCol, colInd + i * fixRow, 0);
+                discoveryTime[rowInd + i * fixCol][colInd+ i * fixRow] = discoveryTime[neib.getRowIndex()][neib.getColumnIndex()]+1;
+                if (discoveryTime[rowInd + i * fixCol][colInd+ i * fixRow]>discoveryTime[maxDiscI][maxDiscJ]) {
+                    maxDiscJ= colInd+ i * fixRow;
+                    maxDiscI=rowInd + i * fixCol;
+                }
+            }
         }
     }
 
     /**
-     * Checks if a position in the maze has exactly one neighbour which is a passage
+     * Checks if a position in the maze has exactly one neighbour which is a passage and if yes, return it
      * @param maze The maze to check
      * @param row The index of the row to check
      * @param col the index of the col to check
-     * @return True if the position has one nieghbour, otherwise - false
+     * @return If the position has one nieghbour - the neighbour position, otherwise - null
      */
-    private boolean hasOneNeib(Maze maze,int row, int col) {
+    private Position hasOneNeib(Maze maze,int row, int col) {
+        Position p=null;
         int count=0;
-        if (maze.PositionInMaze(row+1,col) && maze.getPositionValue(row+1,col)==0)
+        if (maze.PositionInMaze(row+1,col) && maze.getPositionValue(row+1,col)==0) {
+            p=new Position(row+1,col);
             count++;
-        if (maze.PositionInMaze(row,col+1) && maze.getPositionValue(row,col+1)==0)
+        }
+        if (maze.PositionInMaze(row,col+1) && maze.getPositionValue(row,col+1)==0) {
+            p=new Position(row,col+1);
             count++;
-        if (maze.PositionInMaze(row-1,col) && maze.getPositionValue(row-1,col)==0)
+        }
+        if (maze.PositionInMaze(row-1,col) && maze.getPositionValue(row-1,col)==0){
+            p=new Position(row-1,col);
             count++;
-        if (maze.PositionInMaze(row,col-1) && maze.getPositionValue(row,col-1)==0)
+        }
+        if (maze.PositionInMaze(row,col-1) && maze.getPositionValue(row,col-1)==0){
+            p=new Position(row,col-1);
             count++;
-        return count==1;
+        }
+        if (count!=1)
+            return null;
+        return p;
     }
 
     /**
@@ -219,11 +239,20 @@ public class MyMazeGenerator extends AMazeGenerator{
                     maze.setPositionValue(currentCell.getPosition().getBetween(neighbour),0);
                     discoveryTime[currentCell.getPosition().getBetween(neighbour).getRowIndex()][currentCell.getPosition().getBetween(neighbour).getColumnIndex()] = discoveryTime[currentCell.getPosition().getRowIndex()][currentCell.getPosition().getColumnIndex()]+1;
                     discoveryTime[neighbour.getRowIndex()][neighbour.getColumnIndex()] = discoveryTime[currentCell.getPosition().getRowIndex()][currentCell.getPosition().getColumnIndex()]+2;
+                    if (positionInFrame(maze,neighbour) && discoveryTime[neighbour.getRowIndex()][neighbour.getColumnIndex()]>discoveryTime[maxDiscI][maxDiscJ]) {
+                        maxDiscJ= neighbour.getColumnIndex();
+                        maxDiscI=neighbour.getRowIndex();
+                    }
+
                     //Push the neighbour which was discovered, and its neighbours to the stack (as Cell object)
                     stack.push(new Cell(neighbour,GetMyNeibs(maze,neighbour)));
                 }
             }
         }
+    }
+
+    private boolean positionInFrame(Maze maze, Position neighbour) {
+        return neighbour.getRowIndex()== 0 || neighbour.getRowIndex()== maze.getRows()-1 || neighbour.getColumnIndex()== 0 || neighbour.getColumnIndex()== maze.getCols()-1;
     }
 
     /**
