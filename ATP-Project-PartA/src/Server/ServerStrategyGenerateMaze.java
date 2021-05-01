@@ -15,30 +15,11 @@ public class ServerStrategyGenerateMaze implements IServerStrategy{
             ObjectInputStream fromClient = new ObjectInputStream(inFromClient);
             ObjectOutputStream toClient = new ObjectOutputStream(outToClient);
             int [] rowCol = (int []) fromClient.readObject();
-
-            switch (Configurations.getConfigInstance().loadProp().getProperty("mazeGeneratingAlgorithm")){
-                case "MyMazeGenerator":
-                    MyMazeGenerator mazeGen = new MyMazeGenerator();
-                    Maze maze = mazeGen.generate(rowCol[0],rowCol[1]);
-                    toClient.writeObject(maze.toByteArray());
-                    toClient.flush();
-                case "EmptyMazeGenerator":
-                    EmptyMazeGenerator eMaze = new EmptyMazeGenerator();
-                    Maze emptyMaze = eMaze.generate(rowCol[0],rowCol[1]);
-                    toClient.writeObject(emptyMaze.toByteArray());
-                    toClient.flush();
-                case "SimpleMazeGenerator":
-                    SimpleMazeGenerator sMaze = new SimpleMazeGenerator();
-                    Maze simpleMaze = sMaze.generate(rowCol[0],rowCol[1]);
-                    toClient.writeObject(simpleMaze.toByteArray());
-                    toClient.flush();
-
-            }
-
-            //SimpleCompressorOutputStream mcos = new SimpleCompressorOutputStream(toClient);
-
-
-
+            IMazeGenerator mazeGen = MazeGenFactory.MazeGenFactory(Configurations.getConfigInstance().loadProp().getProperty("mazeGeneratingAlgorithm"));
+            Maze maze = mazeGen.generate(rowCol[0],rowCol[1]);
+            SimpleCompressorOutputStream scos = new SimpleCompressorOutputStream(toClient);
+            scos.write(maze.toByteArray());
+            toClient.flush();
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
