@@ -1,8 +1,11 @@
 package algorithms.search;
+
+import java.io.Serializable;
+
 /**
  * represent a general picture of specific move in a searchable problem
  */
-public abstract class AState {
+public abstract class AState implements Serializable {
 
     protected AState father;
     protected int positionValue;
