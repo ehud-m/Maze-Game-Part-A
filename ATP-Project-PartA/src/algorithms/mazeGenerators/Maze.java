@@ -1,9 +1,13 @@
 package algorithms.mazeGenerators;
 
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * This class represents a maze.
  */
-public class Maze {
+public class Maze implements Serializable {
     private Position start;
     private Position goal;
     private int rows;
@@ -27,6 +31,7 @@ public class Maze {
         this.cols = (int)bMaze[3]+((int) bMaze[2])*256;
         this.start = new Position(((int)bMaze[4]*256+(int)bMaze[5]),(int)bMaze[6]*256+(int)bMaze[7]);
         this.goal = new Position((int)bMaze[8]*256+(int)bMaze[9],(int)bMaze[10]*256+(int)bMaze[11]);
+        map=new int[rows][cols];
         for (int i = 0; i < rows ; i++) {
             for (int j = 0; j < cols; j++) {
                 map[i][j] = bMaze[12+j+i*cols]; // cast to int if there is a problem
@@ -45,6 +50,38 @@ public class Maze {
         this.rows = rows;
         this.cols = cols;
         map = new int[rows][cols];
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Maze maze = (Maze) o;
+        if (rows != maze.rows || cols != maze.cols || !start.equals(maze.start) || !goal.equals(maze.goal))
+            return false;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (map[i][j]!=maze.map[i][j])
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(calcSum(),rows, cols,start,goal);
+        return result;
+    }
+
+    private int calcSum() {
+        int sum=0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                sum+=map[i][j];
+            }
+        }
+        return sum;
     }
 
     public byte[] toByteArray(){
