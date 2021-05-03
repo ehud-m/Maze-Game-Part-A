@@ -9,17 +9,30 @@ import algorithms.mazeGenerators.*;
 
 public class ServerStrategyGenerateMaze implements IServerStrategy{
 
+    private static Object o = new Object();
 
     public void applyStrategy(InputStream inFromClient, OutputStream outToClient) {
         try {
+            OutputStream scos;
             ObjectInputStream fromClient = new ObjectInputStream(inFromClient);
             ObjectOutputStream toClient = new ObjectOutputStream(outToClient);
             int [] rowCol = (int []) fromClient.readObject();
-            IMazeGenerator mazeGen = MazeGenFactory.MazeGenFactory(Configurations.getConfigInstance().loadProp().getProperty("mazeGeneratingAlgorithm"));
-            Maze maze = mazeGen.generate(rowCol[0],rowCol[1]);
-            SimpleCompressorOutputStream scos = new SimpleCompressorOutputStream(toClient);
+            IMazeGenerator mazeGen;
+            Maze maze;
+            synchronized (o) {
+                mazeGen = MazeGenFactory.MazeGenFactory(Configurations.getConfigInstance().loadProp().getProperty("mazeGeneratingAlgorithm"));
+            }
+            maze = mazeGen.generate(rowCol[0],rowCol[1]);
+            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+            //choosing compressor
+            scos = CompressorFactory.getCompressor(byteStream);
             scos.write(maze.toByteArray());
+            scos.flush();
+            toClient.writeObject(byteStream.toByteArray());
             toClient.flush();
+            fromClient.close();
+            toClient.close();
+            byteStream.close();
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

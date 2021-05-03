@@ -35,7 +35,7 @@ public class Configurations {
 
     }
 
-    public Properties loadProp(){
+    public synchronized Properties loadProp(){
         try{
             input = new FileInputStream("C:\\Users\\Owner\\IdeaProjects\\ATP-Project-PartA\\resources\\config.properties");
             Properties p = new Properties();

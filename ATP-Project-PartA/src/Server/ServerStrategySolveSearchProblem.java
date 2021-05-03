@@ -7,30 +7,32 @@ import algorithms.search.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerStrategySolveSearchProblem implements IServerStrategy{
     public static final String tempDirectoryPath = System.getProperty("java.io.tmpdir");
-    public static int solutionCounter=0;
+    public static volatile AtomicInteger solutionCounter=new AtomicInteger(0);
     //Maps between a maze, to its file number - mazeNumber.txt
-    public static HashMap<Maze,Integer> hasSolution = new HashMap<>();
+    public static volatile  ConcurrentHashMap<Maze,Integer> hasSolution = new ConcurrentHashMap<>();
     @Override
     public void applyStrategy(InputStream inFromClient, OutputStream outToClient) {
         try {
             ObjectInputStream fromClient = new ObjectInputStream(inFromClient);
             ObjectOutputStream toClient = new ObjectOutputStream(outToClient);
-            Maze maze = (Maze) fromClient.readObject();
-
+            Maze maze = (Maze)fromClient.readObject();
             Solution sol;
             //if the maze was solved - find the maze's solution in the files created by the server
             if (solvedAlready(maze))
                 sol = findSolution(maze);
-            //solve the maze and save its solution
+                //solve the maze and save its solution
             else {
                 SearchableMaze searchMaze = new SearchableMaze(maze);
                 ////////add choice to searching algorithm
-                BestFirstSearch bfs = new BestFirstSearch();
-                sol=bfs.solve(searchMaze);
-                addSolution(maze,sol);
+
+               ISearchingAlgorithm searcher = SearchingAlogrithmFactory.getSearchingAlgorithm();
+               sol=searcher.solve(searchMaze);
+               addSolution(maze,sol);
             }
             toClient.writeObject(sol);
             toClient.flush();
@@ -81,8 +83,8 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy{
             }*/
             out.flush();
 
-            hasSolution.put(maze,solutionCounter);
-            solutionCounter++;
+            hasSolution.put(maze,solutionCounter.getAndIncrement());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
