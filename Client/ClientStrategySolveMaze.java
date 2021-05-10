@@ -11,25 +11,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ClientStrategySolveMaze implements IClientStrategy{
-    private static volatile Maze maze;
-
-
-    public static void generateAmaze(){
-        IMazeGenerator gen = new MyMazeGenerator();
-        maze = gen.generate(1000,1000);
-    }
     @Override
     public void clientStrategy(InputStream inFromServer, OutputStream outToServer) {
         try {
             ObjectOutputStream toServer = new ObjectOutputStream(outToServer);
-         //   IMazeGenerator gen = new MyMazeGenerator();
-         //   Maze maze = gen.generate(1000,1000);
+            IMazeGenerator gen = new MyMazeGenerator();
+            Maze maze = gen.generate(10,10);
 
             toServer.writeObject(maze);
             toServer.flush();
             ObjectInputStream fromServer = new ObjectInputStream(inFromServer);
 
-            Solution sol = (Solution) fromServer.readObject(); //bytes???
+            Solution sol = (Solution) fromServer.readObject();
             //System.out.println("Received Solution: " + sol.toString());
 
             ///solve by my self

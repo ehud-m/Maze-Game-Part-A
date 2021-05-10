@@ -13,11 +13,12 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class ClientStrategyGenerateMaze implements IClientStrategy{
+    private static volatile Object o = new Object();
     public void clientStrategy(InputStream inFromServer, OutputStream outToServer) {
         try {
             ObjectOutputStream toServer = new ObjectOutputStream(outToServer);
             //IMazeGenerator gen = new MyMazeGenerator();
-            int[] rowCol ={5000,5000};
+            int[] rowCol ={10,10};
             toServer.writeObject(rowCol);
             toServer.flush();
             ObjectInputStream fromServer = new ObjectInputStream(inFromServer);
@@ -30,7 +31,9 @@ public class ClientStrategyGenerateMaze implements IClientStrategy{
 SIZE ACCORDING TO YOU MAZE SIZE*/]; //allocating byte[] for the decompressed
             //maze -
             is.read(decompressedMaze); //Fill decompressedMaze
-            System.out.println("HERE");
+            Maze maze = new Maze (decompressedMaze);
+            synchronized (o) {maze.print();
+            System.out.println("Done");}
             //////////////////////////
             is.close();
             fromServer.close();
@@ -39,4 +42,5 @@ SIZE ACCORDING TO YOU MAZE SIZE*/]; //allocating byte[] for the decompressed
             e.printStackTrace();
         }
     }
+
 }

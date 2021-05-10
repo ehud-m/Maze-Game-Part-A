@@ -38,12 +38,4 @@ public class MyDecompressorInputStream extends InputStream {
         return 0;
     }
 
-    /*public static void main(String[] args) {
-        byte b=90;
-        byte[] bin;
-        bin=numToBinary(b);
-        for (int i = 0; i < 8; i++) {
-            System.out.println(bin[i]);
-        }
-    }*/
 }

@@ -1,4 +1,4 @@
-package IO;
+ package IO;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,15 +18,16 @@ public class SimpleDecompressorInputStream extends InputStream {
         for (i = 0; i < 12; i++) {
             b[i]=(byte)read();
         }
+        int byteCounter=12;
         int nextChar=1;
         int count;
-
         while ((count=read())!=-1) {
+            byteCounter++;
             for(;count>0;count--,i++)
                 b[i]=(byte)nextChar;
             nextChar=Math.abs(nextChar-1);
         }
-        return 0;
+        return byteCounter;
     }
 
     @Override

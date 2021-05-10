@@ -1,11 +1,8 @@
-/*
 package test;
 
 import Client.*;
 import IO.MyCompressorOutputStream;
 import IO.MyDecompressorInputStream;
-import IO.SimpleCompressorOutputStream;
-import IO.SimpleDecompressorInputStream;
 import Server.*;
 import algorithms.mazeGenerators.AMazeGenerator;
 import algorithms.mazeGenerators.Maze;
@@ -44,6 +41,7 @@ public class Main {
     }
 
     private static void appendToFile(String text, String filePath){
+        System.out.println(text);
         try (java.io.FileWriter fw = new java.io.FileWriter(filePath, true)) {
             fw.write(text + "\r\n");
         } catch (IOException ex) {
@@ -98,9 +96,7 @@ public class Main {
 
             Test_CompressDecompressMaze();
 
-          //  Test_CommunicateWithServers();
-          //  Thread.sleep(4000);
-          //  System.out.println(total_test+"  pass: " + total_pass);
+            Test_CommunicateWithServers();
         }
         catch (Exception e)
         {
@@ -115,7 +111,6 @@ public class Main {
         String mazeFileName = "savedMaze.maze";
         AMazeGenerator mazeGenerator = new MyMazeGenerator();
         Maze maze = mazeGenerator.generate(size, size); //Generate new maze
-        maze.print();
         double mazeOriginalSize = maze.toByteArray().length;
         try {
             OutputStream out = new MyCompressorOutputStream(new FileOutputStream(mazeFileName));
@@ -126,8 +121,7 @@ public class Main {
 //
             appendToResultsFile(String.valueOf(total_test));
         }
-*/
-/*
+
         byte savedMazeBytes[] = new byte[0];
         try {
             InputStream in = new MyDecompressorInputStream(new FileInputStream(mazeFileName));
@@ -146,14 +140,10 @@ public class Main {
         if (areMazesEquals == true)
         {
             total_pass++;
-            System.out.println("maze Equals");
         }
         else {
             appendToResultsFile(String.valueOf(total_test));
         }
-
- *//*
-
     }
     //</editor-fold>
 
@@ -172,7 +162,7 @@ public class Main {
 
         CommunicateWithServer_MazeGenerating(counter);
         CommunicateWithServer_SolveSearchProblem(counter);
-
+        System.out.println("HERE");
         //Stopping all servers
         mazeGeneratingServer.stop();
         solveSearchProblemServer.stop();
@@ -188,38 +178,32 @@ public class Main {
                         total_test++;
                         int size = (int) (50 * (i+1));
                         ObjectOutputStream toServer = new ObjectOutputStream(outToServer);
-                        ObjectInputStream fromServer = new ObjectInputStream(inFromServer);
                         toServer.flush();
                         int[] mazeDimensions = new int[]{size, size};
                         toServer.writeObject(mazeDimensions); //send maze dimensions to server
                         toServer.flush();
+                        ObjectInputStream fromServer = new ObjectInputStream(inFromServer);
                         byte[] compressedMaze = (byte[]) fromServer.readObject(); //read generated maze (compressed with MyCompressor) from server
-                        InputStream is = new SimpleDecompressorInputStream(new ByteArrayInputStream(compressedMaze));
-                        byte[] decompressedMaze = new byte[1000000 */
-/*CHANGE SIZE ACCORDING TO YOU MAZE SIZE*//*
-]; //allocating byte[] for the decompressed maze -
+                        InputStream is = new MyDecompressorInputStream(new ByteArrayInputStream(compressedMaze));
+                        byte[] decompressedMaze = new byte[1000000 /*CHANGE SIZE ACCORDING TO YOU MAZE SIZE*/]; //allocating byte[] for the decompressed maze -
                         is.read(decompressedMaze); //Fill decompressedMaze with bytes
                         Maze maze = new Maze(decompressedMaze);
-
                         if (maze.toByteArray().length > 1000) {
-                           // System.out.println("passed");
                             testsPassed.incrementAndGet();
                         }
                         else
                         {
-                           // System.out.println("didnt Pass");
                             appendToResultsFile(String.valueOf(total_test));
                         }
                     } catch (Exception e) {
                         appendToResultsFile(String.valueOf(total_test));
                     }
                 }
-            }).start();
+            }).communicateWithServer();
         } catch (Exception e) {
 
         } finally {
         }
-        System.out.println("pass");
         total_pass +=  testsPassed.get();
     }
     private static void CommunicateWithServer_SolveSearchProblem(int i) {
@@ -245,26 +229,23 @@ public class Main {
                         //Print Maze Solution retrieved from the server
                         ArrayList<AState> mazeSolutionSteps = mazeSolution.getSolutionPath();
                         if(!mazeSolutionSteps.isEmpty()){
-                            System.out.println("pass3");
                             testsPassed.incrementAndGet();
                         }
                         else
                         {
                             appendToResultsFile(String.valueOf(total_test));
-                            System.out.println("not pass3");
                         }
                     } catch (Exception e) {
 //
                     }
                 }
-            }).start();
+            }).communicateWithServer();
         } catch (Exception e) {
 
 
         } finally {
         }
         total_pass +=  testsPassed.get();
-        System.out.println("pass 4");
     }
     //</editor-fold>
-}*/
+}

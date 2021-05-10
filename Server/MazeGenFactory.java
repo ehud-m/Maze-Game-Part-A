@@ -4,7 +4,7 @@ import algorithms.mazeGenerators.*;
 
 public class MazeGenFactory {
 
-    public static IMazeGenerator MazeGenFactory(String s) {
+    public static IMazeGenerator MazeGen(String s) {
         switch (s) {
             case "MyMazeGenerator":
                 return new MyMazeGenerator();

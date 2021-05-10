@@ -9,8 +9,7 @@ import algorithms.mazeGenerators.*;
 
 public class ServerStrategyGenerateMaze implements IServerStrategy{
 
-
-    public void applyStrategy(InputStream inFromClient, OutputStream outToClient) {
+    public void ServerStrategy(InputStream inFromClient, OutputStream outToClient) {
         try {
             OutputStream scos;
             ObjectInputStream fromClient = new ObjectInputStream(inFromClient);
@@ -18,8 +17,10 @@ public class ServerStrategyGenerateMaze implements IServerStrategy{
             int [] rowCol = (int []) fromClient.readObject();
             IMazeGenerator mazeGen;
             Maze maze;
-            mazeGen = MazeGenFactory.MazeGenFactory(Configurations.getConfigInstance().loadProp().getProperty("mazeGeneratingAlgorithm"));
+            mazeGen = MazeGenFactory.MazeGen(Configurations.getConfigInstance().loadProp().getProperty("mazeGeneratingAlgorithm"));
             maze = mazeGen.generate(rowCol[0],rowCol[1]);
+
+
             ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
             //choosing compressor
             scos = CompressorFactory.getCompressor(byteStream);
@@ -29,10 +30,10 @@ public class ServerStrategyGenerateMaze implements IServerStrategy{
             toClient.flush();
             fromClient.close();
             toClient.close();
-            byteStream.close();
+            scos.close();
 
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+
         }
 
 
