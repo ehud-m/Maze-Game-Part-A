@@ -3,14 +3,26 @@
 import java.io.IOException;
 import java.io.InputStream;
 
-public class SimpleDecompressorInputStream extends InputStream {
+ /**
+  * this class gets simple compressed maze and decompress him
+  */
+ public class SimpleDecompressorInputStream extends InputStream {
 
     private InputStream in;
 
+    /**
+     * constructor
+     * @param in input strea,
+     */
     public SimpleDecompressorInputStream(InputStream in) {
         this.in = in;
     }
 
+    /**
+     * reads bytes into array
+     * @param b array of bytes
+     * @return
+     */
     @Override
     public int read(byte[] b){
         int i;
@@ -30,6 +42,9 @@ public class SimpleDecompressorInputStream extends InputStream {
         return byteCounter;
     }
 
+    /**
+     * @return next input from input stream
+     */
     @Override
     public int read() {
         try {
