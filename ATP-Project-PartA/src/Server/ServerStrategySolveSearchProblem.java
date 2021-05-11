@@ -12,6 +12,10 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy{
     public static final String tempDirectoryPath = System.getProperty("java.io.tmpdir");
     private static volatile Object o = new Object();
     @Override
+
+    /**
+     * solve maze
+     */
     public void ServerStrategy(InputStream inFromClient, OutputStream outToClient) {
         try {
             ObjectInputStream fromClient = new ObjectInputStream(inFromClient);
@@ -36,6 +40,11 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy{
         }
     }
 
+    /**
+     * this function checks if we already solved the arg maze
+     * @param maze to check if solved
+     * @return Solution if the maze solved already and null if not
+     */
     private Solution findSolution(Maze maze) {
         try {
             long hashCode = maze.hashCode();
@@ -71,6 +80,11 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy{
         return null;
     }
 
+    /**
+     * add solution to temp directory
+     * @param maze maze to add
+     * @param sol solution to add
+     */
     private void addSolution(Maze maze, Solution sol) {
         try {
             ByteArrayOutputStream byteStream;
@@ -78,25 +92,27 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy{
             long hashCode = maze.hashCode();
             String fileName = ""+hashCode;
             int fileNameCounter = 0;
+            //create new file name that not exists to prevent collision names
             String name = tempDirectoryPath+"\\maze"+fileName+"-"+fileNameCounter+".txt";
             synchronized (o) {
                 File hash = new File(name);
+                //if file already exists, search after file name that isn't used
                 while (hash.exists()) {
                     fileNameCounter++;
                     name = tempDirectoryPath + "\\maze" + fileName + "-" + fileNameCounter + ".txt";
                     hash = new File(name);
                 }
+                //create file and use it as output stream
                 out = new ObjectOutputStream(new FileOutputStream(name));
-
                 byteStream = new ByteArrayOutputStream();
-                //choosing compressor
                 MyCompressorOutputStream scos = new MyCompressorOutputStream(byteStream);
                 scos.write(maze.toByteArray());
                 scos.flush();
                 scos.close();
+                //write maze object and send only him
                 out.writeObject(byteStream.toByteArray());
                 out.flush();
-
+                //write solution object
                 out.writeObject(sol);
             }
             out.flush();

@@ -6,6 +6,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
+/**
+ * work in front of configuration file
+ */
 public class Configurations {
 
     private OutputStream output;
@@ -15,7 +18,9 @@ public class Configurations {
 
     private Configurations(){}
 
-
+    /**
+     * @return singleton configuration instance
+     */
     public static Configurations getConfigInstance() {
         if (config == null)
             config = new Configurations();
@@ -24,6 +29,10 @@ public class Configurations {
 
     }
 
+    /**
+     * write into configuration file
+     * @param p properties file
+     */
     public void writeProp(Properties p){
         try{
             output = new FileOutputStream("resources/config.properties");
@@ -35,6 +44,9 @@ public class Configurations {
 
     }
 
+    /**
+     * @return configuration file properties
+     */
     public synchronized Properties loadProp(){
         try{
             input = new FileInputStream("resources/config.properties");
