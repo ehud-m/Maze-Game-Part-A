@@ -3,10 +3,10 @@ package algorithms.search;
 import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.MyMazeGenerator;
 import algorithms.mazeGenerators.Position;
-import maze3D.Maze3D;
-import maze3D.MyMaze3DGenerator;
-import maze3D.Position3D;
-import maze3D.SearchableMaze3D;
+import algorithms.maze3D.Maze3D;
+import algorithms.maze3D.MyMaze3DGenerator;
+import algorithms.maze3D.Position3D;
+import algorithms.maze3D.SearchableMaze3D;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
