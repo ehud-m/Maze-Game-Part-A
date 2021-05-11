@@ -24,6 +24,10 @@ public class Maze implements Serializable {
     starts with 1
     */
 
+    /**
+     * Receives a byte array which represents a maze, and constructs a Maze out of it.
+     * @param bMaze The byte array of the maze
+     */
     public Maze(byte [] bMaze){
         if (bMaze == null)
             throw new NullPointerException("Byte array is null");
@@ -84,6 +88,17 @@ public class Maze implements Serializable {
         return sum;
     }
 
+    /**
+     * Creates a byte array which represents the maze. The next indexes of the byte array represent:
+     * 0-1: The maze number of rows in 256 base
+     * 2-3: The maze number of cols in 256 base
+     * 4-5: The maze start position row index in 256 base
+     * 6-7: The maze start position col index in 256 base
+     * 8-9: The maze end position row index in 256 base
+     * 10-11: The maze end position col index in 256 base
+     * 12-end: Each byte is a poisition of the maze
+     * @return
+     */
     public byte[] toByteArray(){
         byte[] bMaze = new byte[12+rows*cols];
         bMaze[0] = (byte) (rows/256);
