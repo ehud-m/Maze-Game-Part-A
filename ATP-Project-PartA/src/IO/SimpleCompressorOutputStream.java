@@ -12,33 +12,38 @@ public class SimpleCompressorOutputStream extends OutputStream {
     public SimpleCompressorOutputStream(OutputStream out) {
         this.out = out;
         this.counter = 0;
+        this.last=1;
     }
 
     @Override
-    public void write(int b) throws IOException {
-        if (counter == 0 && last ==b )
-            out.write((byte)0);
-        if (last == b) {
-            counter++;
-            if (counter == 255){
-                out.write((byte)255);
-                counter = 0;
+    public void write(int b) {
+        try {
+            if (last == b) {
+                counter++;
+                if (counter == 255) {
+                    out.write((byte) 255);
+                    counter = 0;
+                }
+            } else {
+                last = b;
+                out.write((byte) counter);
+                counter = 1;
             }
         }
-        else {
-            last = b;
-            out.write((byte)counter);
-            counter = 1;
-        }
-
+        catch (Exception e) {}
     }
 
-    public void write(byte [] b) throws IOException {
-        for (int i = 0; i < 12; i++) {
-            out.write(b[i]);
+    public void write(byte [] b) {
+        try {
+            for (int i = 0; i < 12; i++) {
+                out.write(b[i]);
+            }
+            for (int i = 12; i < b.length; i++) {
+                write(b[i]); // maybe slows the prog
+            }
+            if (counter != 0)
+                out.write(counter);
         }
-        for (int i = 12; i < b.length; i++) {
-            write(b[i]); // maybe slows the prog
-        }
+        catch (Exception e ) {}
     }
 }

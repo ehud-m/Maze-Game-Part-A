@@ -3,36 +3,28 @@ package Server;
 import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.*;
-
+import IO.*;
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerStrategySolveSearchProblem implements IServerStrategy{
     public static final String tempDirectoryPath = System.getProperty("java.io.tmpdir");
-    public static volatile AtomicInteger solutionCounter=new AtomicInteger(0);
-    //Maps between a maze, to its file number - mazeNumber.txt
-    public static volatile  ConcurrentHashMap<Maze,Integer> hasSolution = new ConcurrentHashMap<>();
+    private static volatile Object o = new Object();
     @Override
-    public void applyStrategy(InputStream inFromClient, OutputStream outToClient) {
+    public void ServerStrategy(InputStream inFromClient, OutputStream outToClient) {
         try {
             ObjectInputStream fromClient = new ObjectInputStream(inFromClient);
             ObjectOutputStream toClient = new ObjectOutputStream(outToClient);
-            Maze maze = (Maze)fromClient.readObject();
-            Solution sol;
+            Maze maze;
+            maze =(Maze) fromClient.readObject();
+            Solution sol = findSolution(maze);
             //if the maze was solved - find the maze's solution in the files created by the server
-            if (solvedAlready(maze))
-                sol = findSolution(maze);
-                //solve the maze and save its solution
-            else {
+            if (sol == null){
                 SearchableMaze searchMaze = new SearchableMaze(maze);
-                ////////add choice to searching algorithm
-
-               ISearchingAlgorithm searcher = SearchingAlogrithmFactory.getSearchingAlgorithm();
-               sol=searcher.solve(searchMaze);
-               addSolution(maze,sol);
+                ISearchingAlgorithm searcher = SearchingAlogrithmFactory.getSearchingAlgorithm();
+                sol=searcher.solve(searchMaze);
+                addSolution(maze,sol);
             }
             toClient.writeObject(sol);
             toClient.flush();
@@ -40,53 +32,80 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy{
             fromClient.close();
         }
         catch(Exception e) {
-            e.printStackTrace();
+
         }
     }
 
     private Solution findSolution(Maze maze) {
-        //the number of the mazes solution file
-        int solutionNum = hasSolution.get(maze);
-        ArrayList<AState> arr = new ArrayList<>();
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(tempDirectoryPath+"\\maze"+solutionNum+".txt")));
-            String str;
-            while ((str=reader.readLine())!=null) {
-                int seperatorIndex = str.indexOf(",");
-                int x=Integer.parseInt(str.substring(1,seperatorIndex));
-                int y=Integer.parseInt(str.substring(seperatorIndex+1,str.length()-1));
-                arr.add(new MazeState(new Position(x,y),0));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new Solution(arr);
-    }
+            long hashCode = maze.hashCode();
+            String fileName = ""+hashCode;
+            int fileNameCounter = 0;
+            String name = tempDirectoryPath+"\\maze"+fileName+"-"+fileNameCounter+".txt";
+            File hash = new File(name);
 
-    private boolean solvedAlready(Maze maze) {
-        return hasSolution.containsKey(maze);
+            while (hash.exists()) {
+                synchronized (o) {
+                    ObjectInputStream in = new ObjectInputStream(new FileInputStream(name));
+                    ByteArrayInputStream byteIn = new ByteArrayInputStream((byte[]) in.readObject());
+                    MyDecompressorInputStream decompress = new MyDecompressorInputStream(byteIn);
+                    byte[] decompressedMaze = new byte[1500000];
+                    decompress.read(decompressedMaze);
+                    if (maze.equals(new Maze(decompressedMaze))) {
+                        Solution sol = (Solution) in.readObject();
+                        in.close();
+                        decompress.close();
+                        return sol;
+                    }
+                    in.close();
+                    decompress.close();
+                }
+                fileNameCounter++;
+                name = tempDirectoryPath+"\\maze"+fileName+"-"+fileNameCounter+".txt";
+                hash = new File(name);
+            }
+
+        } catch (Exception e) {
+
+        }
+        return null;
     }
 
     private void addSolution(Maze maze, Solution sol) {
         try {
-            BufferedWriter out = new BufferedWriter(new PrintWriter(new FileOutputStream(tempDirectoryPath+"\\maze"+solutionCounter+".txt")));
-            ArrayList<AState> arr = sol.getSolutionPath();
-            for (int i = 0; i < arr.size(); i++) {
-                out.write(arr.get(i).toString()+"\n");
+            ByteArrayOutputStream byteStream;
+            ObjectOutputStream out;
+            long hashCode = maze.hashCode();
+            String fileName = ""+hashCode;
+            int fileNameCounter = 0;
+            String name = tempDirectoryPath+"\\maze"+fileName+"-"+fileNameCounter+".txt";
+            synchronized (o) {
+                File hash = new File(name);
+                while (hash.exists()) {
+                    fileNameCounter++;
+                    name = tempDirectoryPath + "\\maze" + fileName + "-" + fileNameCounter + ".txt";
+                    hash = new File(name);
+                }
+                out = new ObjectOutputStream(new FileOutputStream(name));
+
+                byteStream = new ByteArrayOutputStream();
+                //choosing compressor
+                MyCompressorOutputStream scos = new MyCompressorOutputStream(byteStream);
+                scos.write(maze.toByteArray());
+                scos.flush();
+                scos.close();
+                out.writeObject(byteStream.toByteArray());
+                out.flush();
+
+                out.writeObject(sol);
             }
-            /*File f = new File(tempDirectoryPath+"\\maze"+solutionCounter+".txt");
-            f.createNewFile();
-            FileWriter writer = new FileWriter(tempDirectoryPath+"\\maze"+solutionCounter+".txt");
-            ArrayList<AState> arr = sol.getSolutionPath();
-            for (int i = 0; i < arr.size(); i++) {
-                writer.write(arr.get(i).toString()+"\n");
-            }*/
             out.flush();
+            out.close();
+            byteStream.close();
 
-            hasSolution.put(maze,solutionCounter.getAndIncrement());
+        }
+        catch (Exception e) {
 
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

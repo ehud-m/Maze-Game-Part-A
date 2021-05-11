@@ -1,9 +1,8 @@
 package test;
-import algorithms.mazeGenerators.*;
-import maze3D.IMaze3DGenerator;
-import maze3D.Maze3D;
-import maze3D.MyMaze3DGenerator;
-import maze3D.Position3D;
+import algorithms.maze3D.IMaze3DGenerator;
+import algorithms.maze3D.Maze3D;
+import algorithms.maze3D.MyMaze3DGenerator;
+import algorithms.maze3D.Position3D;
 
 public class RunMaze3DGenerator {
     public static void main(String[] args) {

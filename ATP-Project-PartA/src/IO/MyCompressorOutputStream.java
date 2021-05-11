@@ -18,23 +18,26 @@ public class MyCompressorOutputStream extends OutputStream {
             }
 
     @Override
-    public void write(int b) throws IOException {
-        out.write(b);
-    }
+    public void write(int b) {
+        try {
+            out.write(b);
+        } catch (IOException e) {
 
-    public void write(byte[] b) throws IOException {
-        int i;
-        for (i = 0; i < 12; i++) {
-            write(b[i]);
-        }
-
-        for (;  i<b.length ; i+=8) {
-            write(binaryToByte(b,i));
         }
     }
 
-    /*public static void main(String[] args) {
-        int x =128;
-        System.out.println((byte)x);
-    }*/
+    public void write(byte[] b) {
+        try {
+            int i;
+            for (i = 0; i < 12; i++) {
+                write(b[i]);
+            }
+
+            for (; i < b.length; i += 8) {
+                write(binaryToByte(b, i));
+            }
+        }
+        catch (Exception e) {}
+    }
+
 }

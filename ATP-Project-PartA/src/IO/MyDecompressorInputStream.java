@@ -11,8 +11,13 @@ public class MyDecompressorInputStream extends InputStream {
     }
 
     @Override
-    public int read() throws IOException {
-        return in.read();
+    public int read() {
+        try {
+            return in.read();
+        } catch (IOException e) {
+
+        }
+        return -1;
     }
 
     private static byte[] numToBinary(byte b) {
@@ -25,25 +30,20 @@ public class MyDecompressorInputStream extends InputStream {
         return bin;
     }
 
-    public int read(byte[] b) throws IOException {
-        int i;
-        for (i = 0; i < 12; i++) {
-            b[i]=(byte)read();
+    public int read(byte[] b) {
+        try {
+            int i;
+            for (i = 0; i < 12; i++) {
+                b[i] = (byte) read();
+            }
+            for (; i < b.length; ) {
+                byte[] bin = numToBinary((byte) in.read());
+                for (int j = 0; j < 8 && i < b.length; i++, j++)
+                    b[i] = bin[j];
+            }
         }
-        for (; i <b.length ;) {
-            byte[] bin =numToBinary((byte)in.read());
-            for (int j=0;j<8 && i<b.length;i++,j++)
-                b[i]=bin[j];
-        }
+        catch (Exception e) {}
         return 0;
     }
 
-    /*public static void main(String[] args) {
-        byte b=90;
-        byte[] bin;
-        bin=numToBinary(b);
-        for (int i = 0; i < 8; i++) {
-            System.out.println(bin[i]);
-        }
-    }*/
 }

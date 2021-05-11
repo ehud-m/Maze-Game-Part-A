@@ -26,31 +26,26 @@ public class Configurations {
 
     public void writeProp(Properties p){
         try{
-            output = new FileOutputStream("C:\\Users\\Owner\\IdeaProjects\\ATP-Project-PartA\\resources\\config.properties");
+            output = new FileOutputStream("resources/config.properties");
             p.store(output,null);
         }
         catch (Exception e){
-            e.getCause();
+
         }
 
     }
 
     public synchronized Properties loadProp(){
         try{
-            input = new FileInputStream("C:\\Users\\Owner\\IdeaProjects\\ATP-Project-PartA\\resources\\config.properties");
+            input = new FileInputStream("resources/config.properties");
             Properties p = new Properties();
             p.load(input);
             return p;
         }
         catch (Exception e){
-            e.getCause();
+
         }
         return null;
     }
-
-    public void print(){
-        System.out.println(loadProp());
-    }
-
 
 }
